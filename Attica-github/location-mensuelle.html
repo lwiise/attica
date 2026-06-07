@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOCATION MENSUELLE — Suites 45m² | Attica Résidences</title>
+<meta name="description" content="Suites meublées 2 pièces 45m² à St-Sulpice, face à l'EPFL et l'UNIL. Location mensuelle Masters, PhD, Chercheurs. Dès CHF 3'200/mois TVA incluse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --gold: #A8843A;
+  --gold-light: #C9A96E;
+  --dark: #1C1A17;
+  --muted: rgba(28,26,23,0.55);
+  --border: rgba(168,132,58,0.2);
+  --bg: #fff;
+  --section-bg: #FAFAF8;
+  --red: #EE0000;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--dark); }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 72px;
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(168,132,58,0.12);
+}
+.nav-logo { display: flex; align-items: center; text-decoration: none; }
+.nav-logo img { height: 44px; width: auto; }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-back {
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 10px; font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase;
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--gold); }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+.lang-toggle { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.lang-btn {
+  background: transparent; border: none; color: rgba(28,26,23,0.38);
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 12px;
+  cursor: pointer; transition: all 0.3s;
+}
+.lang-btn.active { background: var(--gold); color: #fff; font-weight: 400; }
+.lang-btn:not(.active):hover { color: var(--gold); }
+.lang-divider { width: 1px; height: 24px; background: var(--border); }
+
+/* HERO */
+.hero {
+  margin-top: 72px;
+  height: 60vh; min-height: 380px; max-height: 520px;
+  position: relative; overflow: hidden;
+}
+.hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(28,26,23,0.1) 0%, rgba(28,26,23,0.58) 100%);
+}
+.hero-content { position: absolute; bottom: 48px; left: 64px; right: 64px; }
+.hero-eyebrow { font-size: 10px; font-weight: 300; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300; font-size: clamp(36px, 5vw, 62px);
+  color: #fff; line-height: 1.1; margin-bottom: 8px;
+}
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-sub { font-size: 13px; font-weight: 200; letter-spacing: 0.15em; color: rgba(255,255,255,0.7); }
+
+/* ANCHOR NAV */
+.anchor-nav {
+  background: var(--section-bg); border-bottom: 1px solid var(--border);
+  padding: 0; display: flex; overflow-x: auto; scrollbar-width: none;
+}
+.anchor-nav::-webkit-scrollbar { display: none; }
+.anchor-link {
+  flex: 1; text-align: center; min-width: 0;
+  text-decoration: none; color: var(--muted);
+  font-size: 13px; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 20px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-bottom: 2px solid transparent;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.anchor-link:hover { color: var(--gold); border-color: var(--gold); background: rgba(168,132,58,0.03); }
+.anchor-link.active { color: var(--gold); border-color: var(--gold); }
+
+/* SECTIONS */
+.section { padding: 80px 0; border-bottom: 1px solid rgba(168,132,58,0.08); }
+.section:nth-child(even) { background: var(--section-bg); }
+.container { max-width: 860px; margin: 0 auto; padding: 0 48px; }
+
+.section-eyebrow {
+  font-size: 12px; font-weight: 300; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 60px; }
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300; font-size: clamp(28px, 4vw, 42px);
+  color: var(--dark); line-height: 1.15; margin-bottom: 32px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+.section-title .red { color: var(--red); font-style: normal; }
+
+.section-body {
+  font-size: 17px; font-weight: 300; line-height: 1.9;
+  color: rgba(28,26,23,0.75); text-align: justify;
+}
+.section-body p { margin-bottom: 20px; }
+.section-body p:last-child { margin-bottom: 0; }
+
+/* ALERT BOX */
+.alert-box {
+  border: 1px solid rgba(168,132,58,0.35);
+  background: rgba(168,132,58,0.04);
+  padding: 24px 28px; margin-bottom: 32px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.alert-box svg { width: 20px; height: 20px; stroke: var(--gold); stroke-width: 1.5; fill: none; flex-shrink: 0; margin-top: 2px; }
+.alert-box p { font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--dark); }
+
+/* FEATURES */
+.features {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px; margin-top: 40px;
+}
+.feature { padding: 24px 24px 20px; border: 1px solid var(--border); background: #fff; }
+.feature-icon { color: var(--gold); margin-bottom: 12px; }
+.feature-icon svg { width: 22px; height: 22px; stroke: var(--gold); stroke-width: 1.5; fill: none; }
+.feature-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 400; color: var(--dark); margin-bottom: 8px;
+}
+.feature-text { font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.65; }
+
+/* PRICING TABLE */
+.pricing-table { margin-top: 36px; border: 1px solid var(--border); overflow: hidden; }
+.pricing-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px; border-bottom: 1px solid rgba(168,132,58,0.08);
+}
+.pricing-row:last-child { border-bottom: none; }
+.pricing-row.total { background: rgba(168,132,58,0.05); border-top: 1px solid var(--border); }
+.pricing-label { font-size: 14px; font-weight: 300; color: var(--muted); }
+.pricing-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 400; color: var(--dark);
+}
+.pricing-row.total .pricing-value { color: var(--gold); font-size: 20px; }
+.pricing-row.total .pricing-label { font-weight: 400; color: var(--dark); font-size: 14px; }
+
+/* GALLERY */
+.gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 40px; }
+.gallery-item { position: relative; overflow: hidden; cursor: pointer; aspect-ratio: 4/3; background: #f0ede8; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; display: block; }
+.gallery-item:hover img { transform: scale(1.04); }
+.gallery-item:first-child { grid-column: span 2; aspect-ratio: 16/9; }
+.gallery-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(transparent, rgba(28,26,23,0.6));
+  color: rgba(255,255,255,0.85);
+  font-size: 10px; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase;
+  opacity: 0; transition: opacity 0.3s;
+}
+.gallery-item:hover .gallery-caption { opacity: 1; }
+
+/* LIGHTBOX */
+.lightbox {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(20,18,15,0.97);
+  align-items: center; justify-content: center; flex-direction: column;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 92vw; max-height: 80vh; object-fit: contain; }
+.lightbox-caption { color: rgba(255,255,255,0.5); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 16px; }
+.lightbox-close { position: absolute; top: 24px; right: 32px; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 28px; cursor: pointer; }
+.lightbox-close:hover { color: #fff; }
+.lightbox-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: none; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7); width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.lightbox-nav:hover { border-color: var(--gold); color: var(--gold); }
+.lightbox-prev { left: 24px; }
+.lightbox-next { right: 24px; }
+.lightbox-nav svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+
+/* FORM */
+.form-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 400; color: var(--dark);
+  margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group.full { grid-column: span 2; }
+.form-label { font-size: 10px; font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 13px 16px;
+  border: 1px solid rgba(168,132,58,0.25); background: #fff;
+  font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 300;
+  color: var(--dark); outline: none; transition: border-color 0.3s; appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+.form-textarea { min-height: 100px; resize: vertical; }
+.form-upload-area {
+  border: 1px dashed rgba(168,132,58,0.4); padding: 24px; text-align: center;
+  cursor: pointer; transition: border-color 0.3s, background 0.3s;
+}
+.form-upload-area:hover { border-color: var(--gold); background: rgba(168,132,58,0.03); }
+.form-upload-area input { display: none; }
+.form-upload-icon { color: var(--gold); margin-bottom: 8px; }
+.form-upload-icon svg { width: 28px; height: 28px; stroke: var(--gold); stroke-width: 1.5; fill: none; }
+.form-upload-label { font-size: 12px; font-weight: 300; color: var(--muted); letter-spacing: 0.1em; }
+.form-note { font-size: 12px; font-weight: 300; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+.form-submit {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; padding: 18px;
+  background: var(--dark); border: none; color: #fff;
+  font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; margin-top: 8px;
+}
+.form-submit:hover { background: var(--gold); }
+.form-submit svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+.form-success {
+  display: none; text-align: center; padding: 40px;
+  background: rgba(168,132,58,0.05); border: 1px solid var(--border); margin-top: 20px;
+}
+.form-success-icon { color: var(--gold); margin-bottom: 16px; }
+.form-success-icon svg { width: 40px; height: 40px; stroke: var(--gold); stroke-width: 1; fill: none; }
+.form-success h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; margin-bottom: 12px; }
+.form-success p { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+
+/* SCAM BAR */
+.scam-bar {
+  background: #fff; border-top: 1px solid rgba(168,132,58,0.15);
+  padding: 12px 48px; display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.scam-bar svg { width: 14px; height: 14px; stroke: var(--gold); stroke-width: 1.5; fill: none; flex-shrink: 0; }
+.scam-bar p { font-size: 11px; font-weight: 300; letter-spacing: 0.08em; color: rgba(28,26,23,0.5); }
+.scam-bar strong { color: rgba(28,26,23,0.7); font-weight: 400; }
+
+/* WA */
+.wa-float {
+  position: fixed; bottom: 32px; right: 32px; z-index: 300;
+  width: 50px; height: 50px; border-radius: 50%;
+  background: #25D366; display: flex; align-items: center; justify-content: center;
+  text-decoration: none; box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.wa-float:hover { transform: scale(1.1); }
+.wa-float svg { width: 24px; height: 24px; fill: white; }
+a.gold-link { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(168,132,58,0.3); transition: border-color 0.2s; }
+a.gold-link:hover { border-color: var(--gold); }
+
+/* MOBILE */
+@media (max-width: 640px) {
+  html, body { overflow-y: auto; }
+  nav { padding: 0 20px; height: 60px; }
+  .nav-logo img { height: 34px; }
+  .nav-back span { display: none; }
+  .hero-content { bottom: 28px; left: 24px; right: 24px; }
+  .anchor-nav { padding: 0; }
+  .anchor-link { padding: 16px 6px; font-size: 10px; }
+  .container { padding: 0 24px; }
+  .section { padding: 56px 0; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: span 1; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-item:first-child { grid-column: span 2; }
+  .features { grid-template-columns: 1fr 1fr; }
+  .scam-bar { padding: 10px 20px; }
+  .pricing-row { padding: 14px 16px; }
+  .wa-float { bottom: 20px; right: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="assets/images/logo-nav.png" alt="Attica Résidences">
+  </a>
+  <div class="nav-right">
+    <a class="nav-back" href="index.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      <span data-fr="Accueil" data-en="Home">Accueil</span>
+    </a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">FR</button>
+      <div class="lang-divider"></div>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="assets/images/gallery/DSC00388-HDR.jpg" alt="Attica Résidences Suite">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" data-fr="Masters · PhD · Chercheurs · Séjours longue durée" data-en="Masters · PhD · Researchers · Long-term stays">Masters · PhD · Chercheurs · Séjours longue durée</p>
+    <h1 class="hero-title" data-fr="LOCATION MENSUELLE<br><em>Suite meublée 45 m² · 2 pièces</em>" data-en="MONTHLY RENTAL<br><em>Furnished Suite 45 m² · 2 rooms</em>">LOCATION MENSUELLE<br><em>Suite meublée 45 m² · 2 pièces</em></h1>
+    <p class="hero-sub" data-fr="Séjours mensuels · Dès CHF 3'200.– /mois TVA incl." data-en="Monthly stays · From CHF 3,200.– /month VAT incl.">Séjours mensuels · Dès CHF 3'200.– /mois TVA incl.</p>
+  </div>
+</div>
+
+<!-- ANCHOR NAV -->
+<div class="anchor-nav">
+  <a class="anchor-link" href="#presentation" data-fr="Présentation" data-en="Overview">Présentation</a>
+  <a class="anchor-link" href="#equipements" data-fr="Équipements" data-en="Amenities">Équipements</a>
+  <a class="anchor-link" href="#galerie" data-fr="Galerie" data-en="Gallery">Galerie</a>
+  <a class="anchor-link" href="#prix" data-fr="Prix" data-en="Pricing">Prix</a>
+  <a class="anchor-link" href="#conditions" data-fr="Conditions" data-en="Conditions">Conditions</a>
+  <a class="anchor-link" href="#formulaire" data-fr="Réservation" data-en="Reservation">Réservation</a>
+</div>
+
+<!-- SECTION 1 — PRÉSENTATION -->
+<div class="section" id="presentation">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Présentation" data-en="Overview">Présentation</p>
+    <h2 class="section-title" data-fr="Votre suite meublée,<br><em>prête à vivre, face au campus</em>" data-en="Your furnished suite,<br><em>ready to move in, right in front of campus</em>">Votre suite meublée,<br><em>prête à vivre, face au campus</em></h2>
+    <div class="section-body">
+      <p data-fr="Attica Résidences propose des <strong>Suites meublées</strong> de standing à St-Sulpice, particulièrement adaptées aux <strong>Masters, PhD, chercheurs et professionnels</strong> en séjour longue durée à Lausanne. L'immeuble est situé juste en face de l'<strong>EPFL</strong> et de l'<strong>UNIL</strong>, avec un accès immédiat aux transports publics et au métro pour rejoindre rapidement la ville." data-en="Attica Résidences offers high-standard <strong>furnished Suites</strong> in St-Sulpice, ideally suited to <strong>Masters, PhD students, researchers and professionals</strong> on long-term stays in Lausanne. The building is located directly opposite <strong>EPFL</strong> and <strong>UNIL</strong>, with immediate access to public transport and the metro for fast connections into the city.">Attica Résidences propose des <strong>Suites meublées</strong> de standing à St-Sulpice, particulièrement adaptées aux <strong>Masters, PhD, chercheurs et professionnels</strong> en séjour longue durée à Lausanne. L'immeuble est situé juste en face de l'<strong>EPFL</strong> et de l'<strong>UNIL</strong>, avec un accès immédiat aux transports publics et au métro pour rejoindre rapidement la ville.</p>
+      <p data-fr="Tout l'immeuble fait <strong>face au lac</strong>, et les plages ainsi que les terrains de sport se trouvent à environ 100 mètres. Les Suites sont toutes orientées côté lac, tandis que seules les parties communes donnent sur le nord — ce qui contribue au <strong>calme</strong>, au silence et à la qualité de vie dans l'immeuble, offrant un cadre résidentiel serein, propice au travail et à la <strong>recherche</strong>." data-en="The entire building faces <strong>the lake</strong>, and the beaches and sports grounds are located around 100 metres away. All Suites are lake-facing, while only the common areas face north — contributing to the <strong>peace</strong>, quiet and quality of life in the building, providing a serene residential environment ideal for work and <strong>research</strong>.">Tout l'immeuble fait <strong>face au lac</strong>, et les plages ainsi que les terrains de sport se trouvent à environ 100 mètres. Les Suites sont toutes orientées côté lac, tandis que seules les parties communes donnent sur le nord — ce qui contribue au <strong>calme</strong>, au silence et à la qualité de vie dans l'immeuble, offrant un cadre résidentiel serein, propice au travail et à la <strong>recherche</strong>.</p>
+      <p data-fr="L'ensemble est récent, privatisé, sécurisé par <strong>CCTV</strong> et conçu pour offrir un cadre résidentiel soigné. L'immeuble est certifié <strong>Minergie</strong>, label suisse axé sur le confort, l'efficacité énergétique et la protection du climat. Il est également soumis aux <strong>normes incendie</strong>, avec sorties de secours et extincteurs à chaque étage." data-en="The property is recent, private, secured by <strong>CCTV</strong> and designed to offer a well-kept residential setting. The building is <strong>Minergie</strong>-certified, a Swiss label focused on comfort, energy efficiency and climate protection. It also complies with <strong>fire safety standards</strong>, with emergency exits and fire extinguishers on every floor.">L'ensemble est récent, privatisé, sécurisé par <strong>CCTV</strong> et conçu pour offrir un cadre résidentiel soigné. L'immeuble est certifié <strong>Minergie</strong>, label suisse axé sur le confort, l'efficacité énergétique et la protection du climat. Il est également soumis aux <strong>normes incendie</strong>, avec sorties de secours et extincteurs à chaque étage.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — ÉQUIPEMENTS -->
+<div class="section" id="equipements">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Équipements" data-en="Amenities">Équipements</p>
+    <h2 class="section-title" data-fr="Des suites entièrement équipées,<br><em>prêtes à vivre</em>" data-en="Fully equipped suites,<br><em>ready to live in</em>">Des suites entièrement équipées,<br><em>prêtes à vivre</em></h2>
+    <div class="section-body">
+      <p data-fr="Chaque Suite offre environ <strong>45 m² en 2 pièces</strong> — un espace de vie/bureau distinct de la chambre — conçue pour une <strong>installation immédiate</strong>. Les logements comprennent un grand lit, un espace bureau et repas séparé, des armoires de rangement, une télévision, une cuisine <strong>entièrement équipée</strong>, une salle de douche privative, une cave et une boîte aux lettres. Le linge de lit, les serviettes de bain et les ustensiles de cuisine, y compris une machine à Nespresso, sont fournis." data-en="Each Suite offers approximately <strong>45 m² across 2 rooms</strong> — a separate living/working space from the bedroom — designed for <strong>immediate move-in</strong>. The suites include a large bed, a separate desk and dining area, storage cupboards, a television, a fully <strong>equipped kitchen</strong>, a private shower room, a cellar space and a mailbox. Bed linen, bath towels and kitchen utensils, including a Nespresso machine, are provided.">Chaque Suite offre environ <strong>45 m² en 2 pièces</strong> — un espace de vie/bureau distinct de la chambre — conçue pour une <strong>installation immédiate</strong>. Les logements comprennent un grand lit, un espace bureau et repas séparé, des armoires de rangement, une télévision, une cuisine <strong>entièrement équipée</strong>, une salle de douche privative, une cave et une boîte aux lettres. Le linge de lit, les serviettes de bain et les ustensiles de cuisine, y compris une machine à Nespresso, sont fournis.</p>
+      <p data-fr="L'accès se fait par badge ou téléphone mobile. La plupart des Suites disposent d'un balcon. Le confort est complété par un <strong>chauffage</strong> au sol, un système de <strong>free-cooling</strong> en été, ainsi qu'une <strong>ventilation double flux</strong> indépendante. Une <strong>buanderie</strong> est accessible dans l'immeuble via un compte d'utilisateur privé." data-en="Access is by badge or mobile phone. Most Suites have a balcony. Comfort is further enhanced by underfloor <strong>heating</strong>, a <strong>free-cooling</strong> system in summer, and an independent <strong>double-flow ventilation</strong> system. A <strong>laundry room</strong> is available in the building through a private user account.">L'accès se fait par badge ou téléphone mobile. La plupart des Suites disposent d'un balcon. Le confort est complété par un <strong>chauffage</strong> au sol, un système de <strong>free-cooling</strong> en été, ainsi qu'une <strong>ventilation double flux</strong> indépendante. Une <strong>buanderie</strong> est accessible dans l'immeuble via un compte d'utilisateur privé.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M2 4v16M2 8h20v12H2M2 12h20"/></svg></div>
+        <p class="feature-title" data-fr="Literies" data-en="Bedding">Literies</p>
+        <p class="feature-text" data-fr="Grand lit, literie complète fournie — draps et serviettes inclus" data-en="Large bed, full bedding provided — sheets and towels included">Grand lit, literie complète fournie — draps et serviettes inclus</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <p class="feature-title" data-fr="Cuisine équipée" data-en="Equipped kitchen">Cuisine équipée</p>
+        <p class="feature-text" data-fr="Plaques à induction, Frigo/Congélateur, Micro-ondes, Nespresso, ustensiles inclus" data-en="Induction hob, Fridge/Freezer, Microwave, Nespresso, utensils included">Plaques à induction, Frigo/Congélateur, Micro-ondes, Nespresso, ustensiles inclus</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+        <p class="feature-title" data-fr="Clé digitale" data-en="Digital key">Clé digitale</p>
+        <p class="feature-text" data-fr="Accès par badge ou smartphone — domotique intégrée" data-en="Access by badge or smartphone — integrated home automation">Accès par badge ou smartphone — domotique intégrée</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg></div>
+        <p class="feature-title" data-fr="Chauffage / Ventilation" data-en="Heating / Ventilation">Chauffage / Ventilation</p>
+        <p class="feature-text" data-fr="Free-cooling en été, chauffage au sol en hiver, ventilation double-flux toute l'année" data-en="Free-cooling in summer, underfloor heating in winter, double-flow ventilation year-round">Free-cooling en été, chauffage au sol en hiver, ventilation double-flux toute l'année</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+        <p class="feature-title" data-fr="Wi-Fi haut débit" data-en="High-speed Wi-Fi">Wi-Fi haut débit</p>
+        <p class="feature-text" data-fr="Connexion individuelle + abo. chaînes TV inclus dans les charges" data-en="Individual connection + TV subscription included in charges">Connexion individuelle + abo. chaînes TV inclus dans les charges</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <p class="feature-title" data-fr="Sécurité" data-en="Security">Sécurité</p>
+        <p class="feature-text" data-fr="CCTV & Protection incendie" data-en="CCTV & Fire protection">CCTV & Protection incendie</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — GALERIE -->
+<div class="section" id="galerie" style="background:#fff;">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Galerie" data-en="Gallery">Galerie</p>
+    <h2 class="section-title" data-fr="Les suites correspondent<br><em>exactement aux photos publiées</em>" data-en="The suites correspond<br><em>exactly to the published photos</em>">Les suites correspondent<br><em>exactement aux photos publiées</em></h2>
+    <div class="section-body">
+      <p data-fr="Toutes les Suites sont de qualité supérieure et les images montrent fidèlement l'état réel des logements. Vu l'<strong>occupation toujours très élevée</strong>, nous ne sommes la plupart du temps pas en mesure d'organiser des visites préalables. Depuis des années, nos locataires procèdent ainsi, souvent en <strong>arrivant directement depuis l'étranger</strong>, sans jamais avoir constaté de différence avec les photos." data-en="All Suites are of superior quality and the images faithfully show the real condition of the apartments. Given the <strong>consistently high occupancy</strong>, we are most of the time not able to organise viewings in advance. For years, our tenants have rented in this way, often <strong>arriving directly from abroad</strong>, and have never found any difference from the photos.">Toutes les Suites sont de qualité supérieure et les images montrent fidèlement l'état réel des logements. Vu l'<strong>occupation toujours très élevée</strong>, nous ne sommes la plupart du temps pas en mesure d'organiser des visites préalables. Depuis des années, nos locataires procèdent ainsi, souvent en <strong>arrivant directement depuis l'étranger</strong>, sans jamais avoir constaté de différence avec les photos.</p>
+    </div>
+    <div class="gallery-grid" id="gallery">
+      <div class="gallery-item" onclick="openLightbox(0)">
+        <img src="assets/images/gallery/DSC00388-HDR.jpg" alt="Suite — Vue d'ensemble" loading="lazy">
+        <div class="gallery-caption">Suite — Vue d'ensemble</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(1)">
+        <img src="assets/images/gallery/DSC01890-HDR.jpg" alt="Suite — Espace de vie" loading="lazy">
+        <div class="gallery-caption">Suite — Espace de vie</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(2)">
+        <img src="assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg" alt="Suite — Dernier étage" loading="lazy">
+        <div class="gallery-caption">Suite — Dernier étage</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(3)">
+        <img src="assets/images/gallery/DSC00237-HDR.jpg" alt="Suite — Coin bureau" loading="lazy">
+        <div class="gallery-caption">Suite — Coin bureau</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(4)">
+        <img src="assets/images/gallery/DSC00368-HDR.jpg" alt="Suite — Chambre" loading="lazy">
+        <div class="gallery-caption">Suite — Chambre</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(5)">
+        <img src="assets/images/gallery/DSC00276-HDR.jpg" alt="Suite — Espace bureau & rangement" loading="lazy">
+        <div class="gallery-caption">Suite — Espace bureau & rangement</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(6)">
+        <img src="assets/images/gallery/BALCON_PRIVE.jpg" alt="Balcon privé avec vue" loading="lazy">
+        <div class="gallery-caption">Balcon privé avec vue</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(7)">
+        <img src="assets/images/gallery/BALCON.jpg" alt="Vue sur le lac depuis le balcon" loading="lazy">
+        <div class="gallery-caption">Vue sur le lac depuis le balcon</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(8)">
+        <img src="assets/images/gallery/CUISINE_TYPE_STUDIOS.jpg" alt="Cuisine équipée" loading="lazy">
+        <div class="gallery-caption">Cuisine équipée</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox(9)">
+        <img src="assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg" alt="Domotique — Clé digitale" loading="lazy">
+        <div class="gallery-caption">Domotique — Clé digitale</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — PRIX -->
+<div class="section" id="prix">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Prix" data-en="Pricing">Prix</p>
+    <h2 class="section-title" data-fr="Prix &amp; charges<br><em>tout compris</em>" data-en="Pricing &amp; charges<br><em>all inclusive</em>">Prix &amp; charges<br><em>tout compris</em></h2>
+    <div class="section-body">
+      <p data-fr="Le coût mensuel comprend l'ameublement complet de la Suite 2 pièces ainsi qu'un forfait de charges couvrant l'<strong>électricité</strong>, l'<strong>eau chaude</strong>, le <strong>chauffage</strong>, le <strong>Wi-Fi individuel</strong> à haut débit, un abo. <strong>chaînes TV</strong> et la <strong>TVA</strong>. Des places de parc sont disponibles sur demande." data-en="The monthly cost includes full Suite furnishings and a flat-rate charge covering <strong>electricity</strong>, <strong>hot water</strong>, <strong>heating</strong>, high-speed individual <strong>Wi-Fi</strong>, a <strong>TV channel subscription</strong> and <strong>VAT</strong>. Parking spaces are available on request.">Le coût mensuel comprend l'ameublement complet de la Suite 2 pièces ainsi qu'un forfait de charges couvrant l'<strong>électricité</strong>, l'<strong>eau chaude</strong>, le <strong>chauffage</strong>, le <strong>Wi-Fi individuel</strong> à haut débit, un abo. <strong>chaînes TV</strong> et la <strong>TVA</strong>. Des places de parc sont disponibles sur demande.</p>
+    </div>
+    <div class="pricing-table">
+      <div class="pricing-row total">
+        <span class="pricing-label" data-fr="Location mensuelle — Suite 45 m², 2 pièces (TVA incl.)" data-en="Monthly rental — Suite 45 m², 2 rooms (VAT incl.)">Location mensuelle — Suite 45 m², 2 pièces (TVA incl.)</span>
+        <span class="pricing-value" data-fr="dès CHF 3'200.– /mois" data-en="from CHF 3,200.– /month">dès CHF 3'200.– /mois</span>
+      </div>
+      <div class="pricing-row">
+        <span class="pricing-label" data-fr="Charges incluses (élec., eau chaude, chauffage, Wi-Fi, abo. TV, TVA)" data-en="Charges included (elec., hot water, heating, Wi-Fi, TV sub., VAT)">Charges incluses (élec., eau chaude, chauffage, Wi-Fi, abo. TV, TVA)</span>
+        <span class="pricing-value" data-fr="Tout compris" data-en="All inclusive">Tout compris</span>
+      </div>
+      <div class="pricing-row">
+        <span class="pricing-label" data-fr="Place de parc intérieure (sur demande)" data-en="Indoor parking (on request)">Place de parc intérieure (sur demande)</span>
+        <span class="pricing-value">CHF 200.– /mois</span>
+      </div>
+      <div class="pricing-row">
+        <span class="pricing-label" data-fr="Place de parc extérieure (sur demande)" data-en="Outdoor parking (on request)">Place de parc extérieure (sur demande)</span>
+        <span class="pricing-value">CHF 120.– /mois</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — CONDITIONS -->
+<div class="section" id="conditions">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Conditions" data-en="Conditions">Conditions</p>
+    <h2 class="section-title" data-fr="Conditions de réservation<br><em>et de séjour</em>" data-en="Reservation conditions<br><em>and stay terms</em>">Conditions de réservation<br><em>et de séjour</em></h2>
+
+    <div class="alert-box">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <p data-fr="<strong>Conditions strictes de non-annulation.</strong> Toute réservation confirmée engage le locataire pour la durée convenue. Aucun remboursement ne sera effectué en cas d'annulation ou de départ anticipé." data-en="<strong>Strict non-cancellation conditions.</strong> Any confirmed reservation commits the tenant for the agreed duration. No refund will be made in case of cancellation or early departure."><strong>Conditions strictes de non-annulation.</strong> Toute réservation confirmée engage le locataire pour la durée convenue. Aucun remboursement ne sera effectué en cas d'annulation ou de départ anticipé.</p>
+    </div>
+
+    <div class="section-body">
+      <p data-fr="<strong>Séjours mensuels :</strong> Les Suites sont disponibles à la location pour des séjours d'un mois minimum. Le tarif est de <strong>CHF 3'200.– / mois TVA incluse</strong>, toutes charges comprises. Le paiement est dû à l'avance pour la totalité du séjour ou mensuellement selon accord préalable." data-en="<strong>Monthly stays:</strong> The Suites are available for rental for a minimum of one month. The rate is <strong>CHF 3,200.– / month VAT included</strong>, all charges included. Payment is due in advance for the full stay or monthly by prior agreement."><strong>Séjours mensuels :</strong> Les Suites sont disponibles à la location pour des séjours d'un mois minimum. Le tarif est de <strong>CHF 3'200.– / mois TVA incluse</strong>, toutes charges comprises. Le paiement est dû à l'avance pour la totalité du séjour ou mensuellement selon accord préalable.</p>
+      <p data-fr="<strong>Procédure de réservation :</strong> Pour effectuer une réservation, veuillez remplir le formulaire ci-dessous en indiquant vos dates de séjour souhaitées, vos coordonnées complètes et joindre une copie de votre pièce d'identité. Notre équipe vous répondra dans les plus brefs délais pour confirmer la disponibilité." data-en="<strong>Reservation procedure:</strong> To make a reservation, please complete the form below with your desired stay dates, full contact details and a copy of your identity document. Our team will respond as quickly as possible to confirm availability."><strong>Procédure de réservation :</strong> Pour effectuer une réservation, veuillez remplir le formulaire ci-dessous en indiquant vos dates de séjour souhaitées, vos coordonnées complètes et joindre une copie de votre pièce d'identité. Notre équipe vous répondra dans les plus brefs délais pour confirmer la disponibilité.</p>
+      <p data-fr="<strong>Attribution des suites :</strong> Les Suites sont attribuées selon le principe <strong>first in, first served</strong>, sur la base du premier dossier complet reçu. Les disponibilités dépendent des suites effectivement libérées. Pour toute question, contactez-nous directement à <a class='gold-link' href='mailto:info@atticaresidences.ch'>info@atticaresidences.ch</a> ou <a class='gold-link' href='mailto:info@segurimmo.ch'>info@segurimmo.ch</a>." data-en="<strong>Suite allocation:</strong> Suites are allocated on a <strong>first in, first served</strong> basis, according to the first complete application received. Availability depends solely on suites that are actually released. For any questions, contact us directly at <a class='gold-link' href='mailto:info@atticaresidences.ch'>info@atticaresidences.ch</a> or <a class='gold-link' href='mailto:info@segurimmo.ch'>info@segurimmo.ch</a>."><strong>Attribution des suites :</strong> Les Suites sont attribuées selon le principe <strong>first in, first served</strong>, sur la base du premier dossier complet reçu. Les disponibilités dépendent des suites effectivement libérées. Pour toute question, contactez-nous directement à <a class='gold-link' href='mailto:info@atticaresidences.ch'>info@atticaresidences.ch</a> ou <a class='gold-link' href='mailto:info@segurimmo.ch'>info@segurimmo.ch</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 — FORMULAIRE -->
+<div class="section" id="formulaire" style="background:#fff;">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Réservation" data-en="Reservation">Réservation</p>
+    <h2 class="section-title" data-fr="Formulaire de<br><em>réservation</em>" data-en="Reservation<br><em>form</em>">Formulaire de<br><em>réservation</em></h2>
+
+    <form id="reservation-form" onsubmit="submitForm(event)" novalidate>
+
+      <!-- SÉJOUR -->
+      <div class="form-section-title" data-fr="Séjour souhaité" data-en="Desired stay">Séjour souhaité</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" data-fr="Date d'arrivée *" data-en="Arrival date *">Date d'arrivée *</label>
+          <input class="form-input" type="date" name="date_arrivee" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Date de départ *" data-en="Departure date *">Date de départ *</label>
+          <input class="form-input" type="date" name="date_depart" required>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-fr="Parking souhaité" data-en="Parking space">Parking souhaité</label>
+          <select class="form-select" name="parking">
+            <option value="non" data-fr="Non" data-en="No">Non</option>
+            <option value="exterieure" data-fr="Oui — Extérieure CHF 120.–/mois" data-en="Yes — Outdoor CHF 120.–/month">Oui — Extérieure CHF 120.–/mois</option>
+            <option value="interieure" data-fr="Oui — Intérieure CHF 200.–/mois" data-en="Yes — Indoor CHF 200.–/month">Oui — Intérieure CHF 200.–/mois</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- IDENTITÉ -->
+      <div class="form-section-title" data-fr="Vos coordonnées" data-en="Your details">Vos coordonnées</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" data-fr="Nom *" data-en="Surname *">Nom *</label>
+          <input class="form-input" type="text" name="nom" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Prénom *" data-en="First name *">Prénom *</label>
+          <input class="form-input" type="text" name="prenom" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Date de naissance" data-en="Date of birth">Date de naissance</label>
+          <input class="form-input" type="date" name="date_naissance">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Nationalité *" data-en="Nationality *">Nationalité *</label>
+          <input class="form-input" type="text" name="nationalite" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Tél. portable / WhatsApp *" data-en="Cellphone / WhatsApp *">Tél. portable / WhatsApp *</label>
+          <input class="form-input" type="tel" name="telephone" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-fr="Adresse email *" data-en="Email address *">Adresse email *</label>
+          <input class="form-input" type="email" name="email" required>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-fr="Adresse actuelle *" data-en="Current address *">Adresse actuelle *</label>
+          <input class="form-input" type="text" name="adresse" required>
+        </div>
+        <div class="form-group full">
+          <label class="form-label" data-fr="Profession / Institution" data-en="Profession / Institution">Profession / Institution</label>
+          <input class="form-input" type="text" name="profession" placeholder="PhD EPFL, Chercheur UNIL...">
+        </div>
+      </div>
+
+      <!-- DOCUMENTS -->
+      <div class="form-section-title" data-fr="Pièce d'identité" data-en="Identity document">Pièce d'identité</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label" data-fr="Copie passeport / CNI *" data-en="Passport / ID copy *">Copie passeport / CNI *</label>
+          <div class="form-upload-area" onclick="document.getElementById('upload-id').click()">
+            <input type="file" id="upload-id" name="piece_identite" accept=".pdf,.jpg,.jpeg,.png" required multiple>
+            <div class="form-upload-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
+            <p class="form-upload-label" data-fr="<strong>Cliquer pour uploader</strong> — PDF, JPG, PNG — plusieurs fichiers possibles" data-en="<strong>Click to upload</strong> — PDF, JPG, PNG — multiple files accepted"><strong>Cliquer pour uploader</strong> — PDF, JPG, PNG — plusieurs fichiers possibles</p>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label" data-fr="Message / Demande particulière" data-en="Message / Special request">Message / Demande particulière</label>
+          <textarea class="form-textarea" name="message"></textarea>
+        </div>
+
+        <div class="form-group full">
+          <p class="form-note" data-fr="Votre demande sera transmise à <strong>info@atticaresidences.ch</strong> et <strong>info@segurimmo.ch</strong>. Vous recevrez une confirmation par email. <strong>Conditions strictes de non-annulation</strong> — toute réservation confirmée engage le locataire pour la durée convenue." data-en="Your request will be sent to <strong>info@atticaresidences.ch</strong> and <strong>info@segurimmo.ch</strong>. You will receive a confirmation email. <strong>Strict non-cancellation conditions</strong> — any confirmed reservation commits the tenant for the agreed duration.">Votre demande sera transmise à <strong>info@atticaresidences.ch</strong> et <strong>info@segurimmo.ch</strong>. Vous recevrez une confirmation par email. <strong>Conditions strictes de non-annulation</strong> — toute réservation confirmée engage le locataire pour la durée convenue.</p>
+        </div>
+
+        <div class="form-group full">
+          <button class="form-submit" type="submit">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span data-fr="Envoyer ma demande de réservation" data-en="Submit my reservation request">Envoyer ma demande de réservation</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="form-success" id="form-success">
+      <div class="form-success-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3 data-fr="Demande envoyée !" data-en="Request sent!">Demande envoyée !</h3>
+      <p data-fr="Votre demande de réservation a bien été transmise à Attica Résidences et Segurimmo. Vous recevrez une confirmation par email dans les plus brefs délais." data-en="Your reservation request has been sent to Attica Résidences and Segurimmo. You will receive a confirmation email shortly.">Votre demande de réservation a bien été transmise à Attica Résidences et Segurimmo. Vous recevrez une confirmation par email dans les plus brefs délais.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SCAM NOTICE -->
+<div class="scam-bar">
+  <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+  <p id="scam-text"><strong>Prudence aux arnaques :</strong> Les demandes de location ne peuvent être traitées que par Attica Résidences ou Segurimmo. Méfiez-vous de tout intermédiaire sollicitant un paiement.</p>
+</div>
+
+<!-- WA FLOAT -->
+<a class="wa-float" href="https://wa.me/41796381790" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.093.541 4.063 1.487 5.779L0 24l6.396-1.677A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.367l-.36-.214-3.726.977.994-3.635-.234-.374A9.794 9.794 0 012.182 12C2.182 6.573 6.573 2.182 12 2.182c5.427 0 9.818 4.391 9.818 9.818 0 5.427-4.391 9.818-9.818 9.818z"/></svg>
+</a>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="changePhoto(-1);event.stopPropagation()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+  <p class="lightbox-caption" id="lightbox-caption"></p>
+  <button class="lightbox-nav lightbox-next" onclick="changePhoto(1);event.stopPropagation()">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<script>
+const galleryData = [
+  { src: "assets/images/gallery/DSC00388-HDR.jpg", caption: "Suite — Vue d'ensemble" },
+  { src: "assets/images/gallery/DSC01890-HDR.jpg", caption: "Suite — Espace de vie" },
+  { src: "assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg", caption: "Suite — Dernier étage" },
+  { src: "assets/images/gallery/DSC00237-HDR.jpg", caption: "Suite — Coin bureau" },
+  { src: "assets/images/gallery/DSC00368-HDR.jpg", caption: "Suite — Chambre" },
+  { src: "assets/images/gallery/DSC00276-HDR.jpg", caption: "Suite — Espace bureau & rangement" },
+  { src: "assets/images/gallery/BALCON_PRIVE.jpg", caption: "Balcon privé avec vue" },
+  { src: "assets/images/gallery/BALCON.jpg", caption: "Vue sur le lac depuis le balcon" },
+  { src: "assets/images/gallery/CUISINE_TYPE_STUDIOS.jpg", caption: "Cuisine équipée" },
+  { src: "assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg", caption: "Domotique — Clé digitale" }
+];
+let currentPhoto = 0;
+function openLightbox(idx) {
+  currentPhoto = idx;
+  document.getElementById('lightbox-img').src = galleryData[idx].src;
+  document.getElementById('lightbox-caption').textContent = galleryData[idx].caption;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+function closeLightboxOutside(e) { if (e.target.id === 'lightbox') closeLightbox(); }
+function changePhoto(dir) {
+  currentPhoto = (currentPhoto + dir + galleryData.length) % galleryData.length;
+  document.getElementById('lightbox-img').src = galleryData[currentPhoto].src;
+  document.getElementById('lightbox-caption').textContent = galleryData[currentPhoto].caption;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') changePhoto(-1);
+  if (e.key === 'ArrowRight') changePhoto(1);
+});
+
+document.querySelectorAll('.form-upload-area input[type=file]').forEach(input => {
+  input.addEventListener('change', function() {
+    const label = this.closest('.form-upload-area').querySelector('.form-upload-label');
+    if (this.files.length > 0) {
+      label.innerHTML = '✓ ' + Array.from(this.files).map(f => f.name).join(', ');
+      label.style.color = 'var(--gold)';
+    }
+  });
+});
+
+function submitForm(e) {
+  e.preventDefault();
+  document.getElementById('reservation-form').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+  document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const scamTexts = {
+  fr: '<strong>Prudence aux arnaques :</strong> Les demandes de location ne peuvent être traitées que par Attica Résidences ou Segurimmo. Méfiez-vous de tout intermédiaire sollicitant un paiement.',
+  en: '<strong>Beware of scams:</strong> Rental applications can only be processed by Attica Résidences or Segurimmo. Beware of any third party requesting payment.'
+};
+
+function setLang(lang) {
+  document.querySelectorAll('[data-fr]').forEach(el => { el.innerHTML = el.getAttribute('data-' + lang); });
+  document.getElementById('scam-text').innerHTML = scamTexts[lang];
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+  localStorage.setItem('attica-lang', lang);
+}
+(function() {
+  const saved = localStorage.getItem('attica-lang');
+  if (saved && saved !== 'fr') setLang(saved);
+})();
+
+const sections = document.querySelectorAll('.section[id]');
+const anchorLinks = document.querySelectorAll('.anchor-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  anchorLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+}, {{ passive: true }});
+</script>
+</body>
+</html>
