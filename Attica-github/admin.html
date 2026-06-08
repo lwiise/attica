@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Attica — Tableau de bord des demandes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--gold:#A8843A;--gold-light:#C9A96E;--dark:#1C1A17;--muted:rgba(28,26,23,.5);--border:rgba(168,132,58,.22);--bg:#faf8f4}
+  body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:400}
+  a{color:var(--gold)}
+  .hidden{display:none!important}
+
+  /* ---- Login ---- */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .login-card{width:100%;max-width:360px;background:#fff;border:1px solid var(--border);padding:44px 38px;text-align:center}
+  .login-card h1{font-size:30px;letter-spacing:.02em}
+  .login-card .sub{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin:6px 0 28px}
+  .field{text-align:left;margin-bottom:16px}
+  .field label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .field input{width:100%;padding:11px 13px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:14px;color:var(--dark)}
+  .field input:focus{outline:none;border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;
+       background:var(--gold);color:#fff;font-family:inherit;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+       padding:12px 20px;transition:background .25s}
+  .btn:hover{background:#8f6f2f}
+  .btn.full{width:100%}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .btn.ghost:hover{color:var(--gold);border-color:var(--gold);background:transparent}
+  .err{color:#b3261e;font-size:12px;margin-top:12px;min-height:16px}
+
+  /* ---- App shell ---- */
+  header.bar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:baseline;gap:12px}
+  .brand h1{font-size:24px}
+  .brand .tag{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+  .who{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:16px}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:18px 28px}
+  .seg{display:flex;border:1px solid var(--border);background:#fff}
+  .seg button{background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:.12em;
+              text-transform:uppercase;color:var(--muted);padding:8px 16px}
+  .seg button.active{background:var(--gold);color:#fff}
+  select.filter,input.search{padding:8px 12px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;color:var(--dark)}
+  input.search{min-width:200px}
+  .count{margin-left:auto;font-size:12px;color:var(--muted)}
+
+  /* ---- List ---- */
+  .list{padding:0 28px 60px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border)}
+  thead th{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);font-weight:400}
+  tbody td{padding:14px 16px;border-bottom:1px solid rgba(168,132,58,.1);font-size:13px;font-weight:300}
+  tbody tr{cursor:pointer;transition:background .15s}
+  tbody tr:hover{background:rgba(168,132,58,.05)}
+  .pill{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
+  .t-annuelle{background:rgba(168,132,58,.14);color:#7a5f24}
+  .t-mensuelle{background:rgba(28,26,23,.08);color:#444}
+  .s-new{background:#e8f0e6;color:#2f6b34}
+  .s-reviewing{background:#fff3d6;color:#8a6d12}
+  .s-accepted{background:#dcefe0;color:#1f6b3a}
+  .s-rejected{background:#fbe3e1;color:#a3271d}
+  .s-archived{background:#ececec;color:#666}
+  .docs-n{font-size:12px;color:var(--gold)}
+  .empty{text-align:center;color:var(--muted);padding:60px;font-weight:300}
+
+  /* ---- Drawer ---- */
+  .scrim{position:fixed;inset:0;background:rgba(28,26,23,.4);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100vh;width:min(560px,100vw);background:#fff;z-index:50;
+          transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;box-shadow:-12px 0 40px rgba(0,0,0,.12)}
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);padding:22px 26px;z-index:2}
+  .drawer-head h2{font-size:24px}
+  .drawer-head .meta{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:4px}
+  .x{position:absolute;top:18px;right:20px;border:none;background:transparent;cursor:pointer;font-size:24px;color:var(--muted);line-height:1}
+  .dsection{padding:22px 26px;border-bottom:1px solid rgba(168,132,58,.12)}
+  .dsection h3{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-family:'Jost';font-weight:400;margin-bottom:14px}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13px;font-weight:300}
+  .kv .k{color:var(--muted)}
+  .kv .v{word-break:break-word}
+  .doc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--border);margin-bottom:8px;font-size:13px;font-weight:300}
+  .doc small{color:var(--muted)}
+  .doc-group{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+  textarea{width:100%;min-height:90px;padding:11px 13px;border:1px solid var(--border);font-family:inherit;font-size:13px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--gold)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .saved{font-size:12px;color:#2f6b34;opacity:0;transition:opacity .2s}
+  .saved.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <form class="login-card" id="login-form">
+    <h1>Attica Résidences</h1>
+    <div class="sub">Tableau de bord</div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn full" type="submit">Se connecter</button>
+    <div class="err" id="login-err"></div>
+  </form>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="hidden">
+  <header class="bar">
+    <div class="brand"><h1>Attica</h1><span class="tag">Demandes de location</span></div>
+    <div class="who"><span id="who-email"></span><button class="btn ghost" id="logout">Déconnexion</button></div>
+  </header>
+
+  <div class="toolbar">
+    <div class="seg" id="type-seg">
+      <button data-type="all" class="active">Toutes</button>
+      <button data-type="annuelle">Annuelle</button>
+      <button data-type="mensuelle">Mensuelle</button>
+    </div>
+    <select class="filter" id="status-filter">
+      <option value="all">Tous les statuts</option>
+      <option value="new">Nouvelle</option>
+      <option value="reviewing">En cours</option>
+      <option value="accepted">Acceptée</option>
+      <option value="rejected">Refusée</option>
+      <option value="archived">Archivée</option>
+    </select>
+    <input class="search" id="search" type="search" placeholder="Rechercher (nom, email…)">
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="list">
+    <table>
+      <thead><tr>
+        <th>Date</th><th>Type</th><th>Demandeur</th><th>Email</th><th>Docs</th><th>Statut</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty hidden" id="empty">Aucune demande pour ce filtre.</div>
+  </div>
+</div>
+
+<!-- ============ DRAWER (détail) ============ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="x" id="close-drawer">&times;</button>
+    <h2 id="d-name"></h2>
+    <div class="meta" id="d-meta"></div>
+  </div>
+  <div class="dsection">
+    <h3>Statut &amp; suivi</h3>
+    <div class="row">
+      <select class="filter" id="d-status">
+        <option value="new">Nouvelle</option>
+        <option value="reviewing">En cours</option>
+        <option value="accepted">Acceptée</option>
+        <option value="rejected">Refusée</option>
+        <option value="archived">Archivée</option>
+      </select>
+      <button class="btn" id="d-save">Enregistrer</button>
+      <span class="saved" id="d-saved">Enregistré ✓</span>
+    </div>
+    <textarea id="d-notes" placeholder="Notes internes…" style="margin-top:12px"></textarea>
+  </div>
+  <div class="dsection">
+    <h3>Documents</h3>
+    <div id="d-docs"></div>
+  </div>
+  <div class="dsection">
+    <h3>Informations</h3>
+    <div class="kv" id="d-fields"></div>
+  </div>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.107.0/dist/umd/supabase.min.js"
+        integrity="sha384-o+Hkm/usHFhCEWo1Ae1cLsOLiQQNrD2UfI424QDAaiZR7URnC8v35ey7s2sbGZHB"
+        crossorigin="anonymous"></script>
+<script src="assets/js/config.js"></script>
+<script>
+(function () {
+  const cfg = window.ATTICA_CONFIG || {};
+  if (!cfg.SUPABASE_URL || cfg.SUPABASE_URL.indexOf("VOTRE-PROJET") !== -1) {
+    document.getElementById("login-err").textContent =
+      "Configuration manquante : renseignez assets/js/config.js (SUPABASE_URL, SUPABASE_ANON_KEY).";
+    return;
+  }
+  const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+  const $ = (id) => document.getElementById(id);
+  const STATUS_LABELS = { new:"Nouvelle", reviewing:"En cours", accepted:"Acceptée", rejected:"Refusée", archived:"Archivée" };
+  const FIELD_LABELS = {
+    nom:"Nom", prenom:"Prénom", email:"Email", date_naissance:"Date de naissance",
+    nationalite:"Nationalité", etat_civil:"État civil", permis:"Permis de séjour",
+    profession:"Profession", tel_prive:"Tél. privé", tel_portable:"Tél. portable", telephone:"Téléphone",
+    adresse:"Adresse actuelle", employeur:"Employeur", adresse_employeur:"Adresse employeur",
+    depuis_le:"En poste depuis", tel_pro:"Tél. professionnel", revenu:"Revenu mensuel (CHF)",
+    reference:"Référence", studio:"Studio souhaité", date_entree:"Date d'entrée",
+    date_specifique:"Date précise", garantie:"Forme de garantie", parking:"Parking",
+    date_arrivee:"Date d'arrivée", date_depart:"Date de départ", message:"Message",
+    nom2:"Co-titulaire — Nom", prenom2:"Co-titulaire — Prénom", nationalite2:"Co-titulaire — Nationalité", tel2:"Co-titulaire — Tél."
+  };
+
+  let all = [];
+  let current = null;
+  const state = { type:"all", status:"all", q:"" };
+
+  // ---- Auth ----
+  $("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    $("login-err").textContent = "";
+    const { error } = await sb.auth.signInWithPassword({
+      email: $("email").value.trim(), password: $("password").value
+    });
+    if (error) $("login-err").textContent = "Identifiants incorrects.";
+  });
+  $("logout").addEventListener("click", async () => { await sb.auth.signOut(); });
+
+  sb.auth.onAuthStateChange((_e, session) => { session ? showApp(session) : showLogin(); });
+  sb.auth.getSession().then(({ data }) => { data.session ? showApp(data.session) : showLogin(); });
+
+  function showLogin(){ $("app").classList.add("hidden"); $("login").classList.remove("hidden"); }
+  async function showApp(session){
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+    $("who-email").textContent = session.user.email;
+    await load();
+  }
+
+  // ---- Data ----
+  async function load(){
+    const { data, error } = await sb.from("applications").select("*").order("created_at", { ascending:false });
+    if (error){ alert("Erreur de chargement : " + error.message); return; }
+    all = data || [];
+    render();
+  }
+
+  function render(){
+    const tbody = $("rows"); tbody.innerHTML = "";
+    const q = state.q.toLowerCase();
+    const list = all.filter(a =>
+      (state.type === "all" || a.type === state.type) &&
+      (state.status === "all" || a.status === state.status) &&
+      (!q || [a.applicant_name, a.applicant_email, a.applicant_phone].join(" ").toLowerCase().includes(q))
+    );
+    $("count").textContent = list.length + " demande" + (list.length>1?"s":"");
+    $("empty").classList.toggle("hidden", list.length>0);
+    for (const a of list){
+      const tr = document.createElement("tr");
+      const d = new Date(a.created_at).toLocaleString("fr-CH",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+      const n = Array.isArray(a.files) ? a.files.length : 0;
+      tr.innerHTML =
+        `<td>${d}</td>`+
+        `<td><span class="pill t-${a.type}">${a.type}</span></td>`+
+        `<td>${esc(a.applicant_name)||"—"}</td>`+
+        `<td>${esc(a.applicant_email)||"—"}</td>`+
+        `<td><span class="docs-n">${n} 📎</span></td>`+
+        `<td><span class="pill s-${a.status}">${STATUS_LABELS[a.status]||a.status}</span></td>`;
+      tr.addEventListener("click", () => openDrawer(a));
+      tbody.appendChild(tr);
+    }
+  }
+
+  // ---- Drawer ----
+  async function openDrawer(a){
+    current = a;
+    $("d-name").textContent = a.applicant_name || a.applicant_email || "Demande";
+    $("d-meta").textContent = `${a.type} · ${new Date(a.created_at).toLocaleString("fr-CH")} · ${a.applicant_email||""}`;
+    $("d-status").value = a.status;
+    $("d-notes").value = a.notes || "";
+
+    // Champs
+    const kv = $("d-fields"); kv.innerHTML = "";
+    Object.entries(a.data||{}).forEach(([k,v]) => {
+      if (!v) return;
+      const row = document.createElement("div"); row.style.display="contents";
+      row.innerHTML = `<div class="k">${esc(FIELD_LABELS[k]||k)}</div><div class="v">${esc(v)}</div>`;
+      kv.appendChild(row);
+    });
+
+    // Documents groupés par champ -> URLs signées
+    const box = $("d-docs"); box.innerHTML = "Chargement…";
+    const files = Array.isArray(a.files) ? a.files : [];
+    if (!files.length){ box.innerHTML = '<p style="color:var(--muted);font-weight:300">Aucun document.</p>'; }
+    else {
+      box.innerHTML = "";
+      const groups = {};
+      files.forEach(f => { (groups[f.field] = groups[f.field]||[]).push(f); });
+      for (const [field, arr] of Object.entries(groups)){
+        const h = document.createElement("div"); h.className="doc-group"; h.textContent = FIELD_LABELS[field]||field; box.appendChild(h);
+        for (const f of arr){
+          const { data } = await sb.storage.from("applications").createSignedUrl(f.path, 300);
+          const el = document.createElement("div"); el.className="doc";
+          const kb = f.size ? " · "+Math.round(f.size/1024)+" Ko" : "";
+          el.innerHTML = `<span>${esc(f.name)}<small>${kb}</small></span>`;
+          const a2 = document.createElement("a"); a2.className="btn"; a2.textContent="Télécharger";
+          a2.href = data ? data.signedUrl : "#"; a2.target="_blank"; a2.rel="noopener";
+          el.appendChild(a2); box.appendChild(el);
+        }
+      }
+    }
+    $("scrim").classList.add("open"); $("drawer").classList.add("open");
+  }
+  function closeDrawer(){ $("scrim").classList.remove("open"); $("drawer").classList.remove("open"); current=null; }
+  $("close-drawer").addEventListener("click", closeDrawer);
+  $("scrim").addEventListener("click", closeDrawer);
+
+  $("d-save").addEventListener("click", async () => {
+    if (!current) return;
+    const status = $("d-status").value, notes = $("d-notes").value;
+    const { error } = await sb.from("applications").update({ status, notes }).eq("id", current.id);
+    if (error){ alert("Erreur : " + error.message); return; }
+    current.status = status; current.notes = notes;
+    const i = all.findIndex(x => x.id === current.id); if (i>=0){ all[i].status=status; all[i].notes=notes; }
+    render();
+    const s = $("d-saved"); s.classList.add("show"); setTimeout(()=>s.classList.remove("show"), 1500);
+  });
+
+  // ---- Filtres ----
+  $("type-seg").addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    [...e.currentTarget.children].forEach(x=>x.classList.remove("active")); b.classList.add("active");
+    state.type = b.dataset.type; render();
+  });
+  $("status-filter").addEventListener("change", e => { state.status = e.target.value; render(); });
+  $("search").addEventListener("input", e => { state.q = e.target.value; render(); });
+
+  function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+})();
+</script>
+</body>
+</html>

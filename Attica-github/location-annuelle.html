@@ -57,7 +57,7 @@ nav {
   height: 60vh; min-height: 380px; max-height: 520px;
   position: relative; overflow: hidden;
 }
-.hero img {
+.hero img, .hero video {
   width: 100%; height: 100%; object-fit: cover; object-position: center 40%;
   display: block;
 }
@@ -405,7 +405,11 @@ a.gold-link:hover { border-color: var(--gold); }
 
 <!-- HERO -->
 <div class="hero">
-  <img src="assets/images/gallery/DSC00368-HDR.jpg" alt="Attica Résidences Studio">
+  <video class="hero-media" autoplay muted loop playsinline preload="auto"
+         aria-label="Attica Résidences Studio"
+         poster="assets/images/gallery/DSC00368-HDR.jpg">
+    <source src="assets/images/RV%20-%20Attica%20R%C3%A9sidence%20V5%20(1).mp4" type="video/mp4">
+  </video>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <p class="hero-eyebrow" data-fr="Étudiants EPFL / UNIL" data-en="EPFL / UNIL Students">Étudiants EPFL / UNIL</p>
@@ -614,6 +618,10 @@ a.gold-link:hover { border-color: var(--gold); }
     <h2 class="section-title" data-fr="Faites votre<br><em>demande de location</em>" data-en="Submit your<br><em>rental application</em>">Faites votre<br><em>demande de location</em></h2>
 
     <form id="rental-form" onsubmit="submitForm(event)" novalidate>
+      <input type="hidden" name="form_type" value="annuelle">
+      <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+        <label>Ne pas remplir<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
+      </div>
 
       <!-- ── STUDIO & DATES ── -->
       <div class="form-section-title" data-fr="Studio & Date d'entrée" data-en="Studio &amp; Move-in date">Studio & Date d'entrée</div>
@@ -888,6 +896,7 @@ a.gold-link:hover { border-color: var(--gold); }
   </button>
 </div>
 
+<script src="assets/js/config.js"></script>
 <script>
 // Gallery data for lightbox
 const galleryData = [
@@ -939,12 +948,29 @@ document.querySelectorAll('.form-upload-area input[type=file]').forEach(input =>
   });
 });
 
-// Form submit (simulated — à connecter à un vrai backend ou Formspree)
-function submitForm(e) {
+// Envoi réel vers Supabase (Edge Function). Voir assets/js/config.js et SETUP.md
+async function submitForm(e) {
   e.preventDefault();
-  document.getElementById('rental-form').style.display = 'none';
-  document.getElementById('form-success').style.display = 'block';
-  document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const form = document.getElementById('rental-form');
+  const btn = form.querySelector('.form-submit');
+  const cfg = window.ATTICA_CONFIG || {};
+  if (!cfg.SUBMIT_ENDPOINT || cfg.SUBMIT_ENDPOINT.indexOf('VOTRE-PROJET') !== -1) {
+    alert('Configuration manquante : renseignez assets/js/config.js avant la mise en ligne.');
+    return;
+  }
+  const originalHTML = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerHTML = '<span data-fr="Envoi en cours…" data-en="Sending…">Envoi en cours…</span>'; }
+  try {
+    const res = await fetch(cfg.SUBMIT_ENDPOINT, { method: 'POST', body: new FormData(form) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    form.style.display = 'none';
+    const ok = document.getElementById('form-success');
+    ok.style.display = 'block';
+    ok.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.innerHTML = originalHTML; }
+    alert("Une erreur s'est produite lors de l'envoi de votre demande. Merci de réessayer, ou de nous contacter par WhatsApp.");
+  }
 }
 
 // Language
