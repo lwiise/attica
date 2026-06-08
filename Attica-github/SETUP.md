@@ -74,7 +74,16 @@ SUBMIT_ENDPOINT:   "https://xxxx.supabase.co/functions/v1/submit-application",
 
 ### 6. Créer votre compte admin
 1. Menu **Authentication → Users → Add user** → email + mot de passe (pour vous / Segurimmo).
-2. **Authentication → Providers → Email** : désactivez **« Enable sign-ups »**
+2. **Déclarez ce compte comme administrateur** (obligatoire — sinon le tableau de
+   bord n'affiche aucune demande). Dans **SQL Editor**, exécutez en remplaçant l'email :
+   ```sql
+   insert into public.admins (user_id, email)
+   select id, email from auth.users where email = 'vous@exemple.com'
+   on conflict (user_id) do nothing;
+   ```
+   Seuls les comptes présents dans `public.admins` peuvent lire/gérer les demandes et
+   télécharger les documents (verrouillage RLS, en plus du point 3 ci-dessous).
+3. **Authentication → Providers → Email** : désactivez **« Enable sign-ups »**
    pour qu'aucun inconnu ne puisse créer de compte.
 
 ### 7. Mettre en ligne et tester

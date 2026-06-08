@@ -18,7 +18,16 @@
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ALLOWED_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+// Noms de champs de fichiers attendus (tout autre nom -> dossier "misc").
+const ALLOWED_FIELDS = new Set([
+  "piece_identite", "justificatifs_financiers", "extrait_poursuites", "assurance_copie",
+]);
+// Signatures binaires (magic bytes) des types réellement acceptés.
+const MAGIC: Array<{ type: string; bytes: number[] }> = [
+  { type: "application/pdf", bytes: [0x25, 0x50, 0x44, 0x46] }, // %PDF
+  { type: "image/jpeg", bytes: [0xff, 0xd8, 0xff] },           // JPEG
+  { type: "image/png", bytes: [0x89, 0x50, 0x4e, 0x47] },      // PNG
+];
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 Mo par fichier
 const MAX_FILES = 25;
 
@@ -44,6 +53,16 @@ function escapeHtml(s: unknown): string {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[c]!));
+}
+
+// Détermine le vrai type d'un fichier d'après ses premiers octets (magic bytes),
+// sans faire confiance au type MIME déclaré par le client. null si non reconnu.
+async function sniffType(file: File): Promise<string | null> {
+  const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+  for (const m of MAGIC) {
+    if (m.bytes.every((b, i) => head[i] === b)) return m.type;
+  }
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -76,11 +95,17 @@ Deno.serve(async (req) => {
 
     if (!fields["email"]) return json({ error: "Email requis" }, 400);
     if (fileEntries.length > MAX_FILES) return json({ error: "Trop de fichiers" }, 400);
-    for (const { file } of fileEntries) {
+
+    // Validation stricte AVANT tout upload : taille + type RÉEL (magic bytes).
+    // Rejette tout fichier vide, trop volumineux ou non reconnu (PDF/JPEG/PNG).
+    const prepared: Array<{ field: string; file: File; contentType: string }> = [];
+    for (const { field, file } of fileEntries) {
       if (file.size > MAX_FILE_BYTES) return json({ error: `Fichier trop volumineux : ${file.name}` }, 400);
-      if (file.type && !ALLOWED_TYPES.includes(file.type)) {
-        return json({ error: `Type de fichier non autorisé : ${file.name}` }, 400);
-      }
+      const sniffed = await sniffType(file);
+      if (!sniffed) return json({ error: `Type de fichier non autorisé : ${file.name}` }, 400);
+      // Le nom de champ vient du client -> on le restreint à une liste connue.
+      const safeField = ALLOWED_FIELDS.has(field) ? field : "misc";
+      prepared.push({ field: safeField, file, contentType: sniffed });
     }
 
     const supabase = createClient(
@@ -91,16 +116,13 @@ Deno.serve(async (req) => {
     const id = crypto.randomUUID();
     const stored: Array<Record<string, unknown>> = [];
 
-    for (const { field, file } of fileEntries) {
+    for (const { field, file, contentType } of prepared) {
       const path = `${type}/${id}/${field}/${safeName(file.name)}`;
       const { error: upErr } = await supabase.storage
         .from("applications")
-        .upload(path, file, {
-          contentType: file.type || "application/octet-stream",
-          upsert: false,
-        });
+        .upload(path, file, { contentType, upsert: false });
       if (upErr) throw upErr;
-      stored.push({ field, path, name: file.name, size: file.size, type: file.type });
+      stored.push({ field, path, name: file.name, size: file.size, type: contentType });
     }
 
     const applicantName = [fields["prenom"], fields["nom"]].filter(Boolean).join(" ").trim();
