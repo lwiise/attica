@@ -324,6 +324,13 @@ a.gold-link:hover { border-color: var(--gold); }
   .gallery-arrow.next { right: 8px; }
   .gallery-arrow { width: 42px; height: 42px; }
 }
+/* VIDEO EMBED */
+.video-frame {
+  position: relative; width: 100%; padding-bottom: 56.25%;
+  margin-top: 40px; overflow: hidden; background: #000;
+  border: 1px solid var(--border);
+}
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 </style>
 </head>
 <body>
@@ -366,6 +373,7 @@ a.gold-link:hover { border-color: var(--gold); }
   <a class="anchor-link" href="#presentation" data-fr="Présentation" data-en="Overview">Présentation</a>
   <a class="anchor-link" href="#equipements" data-fr="Équipements" data-en="Amenities">Équipements</a>
   <a class="anchor-link" href="#galerie" data-fr="Galerie" data-en="Gallery">Galerie</a>
+  <a class="anchor-link" href="#video" data-fr="Vidéo" data-en="Video">Vidéo</a>
   <a class="anchor-link" href="#prix" data-fr="Prix" data-en="Pricing">Prix</a>
   <a class="anchor-link" href="#conditions" data-fr="Conditions" data-en="Conditions">Conditions</a>
   <a class="anchor-link" href="#formulaire" data-fr="Réservation" data-en="Reservation">Réservation</a>
@@ -494,6 +502,17 @@ a.gold-link:hover { border-color: var(--gold); }
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
       <p class="gallery-counter">← Faites défiler les photos →</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION — VIDÉO -->
+<div class="section" id="video" style="background:#fff;">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Vidéo" data-en="Video">Vidéo</p>
+    <h2 class="section-title" data-fr="Découvrez la résidence<br><em>en vidéo</em>" data-en="Discover the residence<br><em>on video</em>">Découvrez la résidence<br><em>en vidéo</em></h2>
+    <div class="video-frame">
+      <iframe src="https://www.youtube-nocookie.com/embed/Du47OtgzCgY" title="Attica Résidences — Location mensuelle" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 </div>
