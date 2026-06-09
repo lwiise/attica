@@ -285,6 +285,45 @@ a.gold-link:hover { border-color: var(--gold); }
   .pricing-row { padding: 14px 16px; }
   .wa-float { bottom: 20px; right: 20px; }
 }
+/* GALLERY CAROUSEL */
+.gallery-carousel { position: relative; margin-top: 40px; }
+.gallery-track {
+  display: flex; gap: 12px; overflow-x: auto;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  scrollbar-width: none; padding-bottom: 4px;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.gallery-slide {
+  flex: 0 0 auto; width: 540px; height: 380px;
+  scroll-snap-align: center; position: relative;
+  overflow: hidden; cursor: pointer; background: #f0ede8;
+}
+.gallery-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; display: block; }
+.gallery-slide:hover img { transform: scale(1.04); }
+.gallery-slide-caption {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 18px;
+  background: linear-gradient(transparent, rgba(28,26,23,0.78));
+  color: #fff; font-size: 12px; font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.96); border: 1px solid rgba(168,132,58,0.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 10; transition: all 0.3s; box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+.gallery-arrow:hover { background: #A8843A; border-color: #A8843A; }
+.gallery-arrow:hover svg { stroke: #fff; }
+.gallery-arrow svg { width: 20px; height: 20px; stroke: #1C1A17; stroke-width: 1.5; fill: none; }
+.gallery-arrow.prev { left: -26px; }
+.gallery-arrow.next { right: -26px; }
+.gallery-counter { text-align: center; margin-top: 22px; font-size: 12px; letter-spacing: 0.2em; color: rgba(28,26,23,0.55); }
+@media (max-width: 640px) {
+  .gallery-slide { width: 85vw; height: 250px; }
+  .gallery-arrow.prev { left: 8px; }
+  .gallery-arrow.next { right: 8px; }
+  .gallery-arrow { width: 42px; height: 42px; }
+}
 </style>
 </head>
 <body>
@@ -397,47 +436,64 @@ a.gold-link:hover { border-color: var(--gold); }
     <div class="section-body">
       <p data-fr="Toutes les Suites sont de qualité supérieure et les images montrent fidèlement l'état réel des logements. Vu l'<strong>occupation toujours très élevée</strong>, nous ne sommes la plupart du temps pas en mesure d'organiser des visites préalables. Depuis des années, nos locataires procèdent ainsi, souvent en <strong>arrivant directement depuis l'étranger</strong>, sans jamais avoir constaté de différence avec les photos." data-en="All Suites are of superior quality and the images faithfully show the real condition of the apartments. Given the <strong>consistently high occupancy</strong>, we are most of the time not able to organise viewings in advance. For years, our tenants have rented in this way, often <strong>arriving directly from abroad</strong>, and have never found any difference from the photos.">Toutes les Suites sont de qualité supérieure et les images montrent fidèlement l'état réel des logements. Vu l'<strong>occupation toujours très élevée</strong>, nous ne sommes la plupart du temps pas en mesure d'organiser des visites préalables. Depuis des années, nos locataires procèdent ainsi, souvent en <strong>arrivant directement depuis l'étranger</strong>, sans jamais avoir constaté de différence avec les photos.</p>
     </div>
-    <div class="gallery-grid" id="gallery">
-      <div class="gallery-item" onclick="openLightbox(0)">
-        <img src="assets/images/gallery/DSC00388-HDR.jpg" alt="Suite — Vue d'ensemble" loading="lazy">
-        <div class="gallery-caption">Suite — Vue d'ensemble</div>
+    <div class="gallery-carousel">
+      <button class="gallery-arrow prev" onclick="scrollGallery(-1)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="gallery-track" id="gallery-track">
+        <div class="gallery-slide" onclick="openLightbox(0)">
+          <img src="assets/images/gallery/DJI_20250411085216_0005_D-Enhanced-SR-topaz-denoise-text.jpg" alt="Vue de l'immeuble" loading="lazy">
+          <div class="gallery-slide-caption">Vue de l'immeuble</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(1)">
+          <img src="assets/images/gallery/DJI_20250411114009_0033_D-Enhanced-SR-topaz-denoise-text.jpg" alt="Vue aérienne" loading="lazy">
+          <div class="gallery-slide-caption">Vue aérienne</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(2)">
+          <img src="assets/images/gallery/BALCON_PRIVE.jpg" alt="Balcon privé" loading="lazy">
+          <div class="gallery-slide-caption">Balcon privé</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(3)">
+          <img src="assets/images/gallery/BALCON.jpg" alt="Balcon" loading="lazy">
+          <div class="gallery-slide-caption">Balcon</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(4)">
+          <img src="assets/images/gallery/DSC01890-HDR.jpg" alt="Salon / Espace de vie" loading="lazy">
+          <div class="gallery-slide-caption">Salon / Espace de vie</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(5)">
+          <img src="assets/images/gallery/DSC00388-HDR.jpg" alt="Vue d'ensemble" loading="lazy">
+          <div class="gallery-slide-caption">Vue d'ensemble</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(6)">
+          <img src="assets/images/gallery/DSC00237-HDR.jpg" alt="Cuisine" loading="lazy">
+          <div class="gallery-slide-caption">Cuisine</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(7)">
+          <img src="assets/images/gallery/CUISINE_TYPE_STUDIOS.jpg" alt="Cuisine équipée" loading="lazy">
+          <div class="gallery-slide-caption">Cuisine équipée</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(8)">
+          <img src="assets/images/gallery/DSC00368-HDR.jpg" alt="Chambre" loading="lazy">
+          <div class="gallery-slide-caption">Chambre</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(9)">
+          <img src="assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg" alt="Dernier étage (2ème)" loading="lazy">
+          <div class="gallery-slide-caption">Dernier étage (2ème)</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(10)">
+          <img src="assets/images/gallery/DSC00276-HDR.jpg" alt="Espace bureau" loading="lazy">
+          <div class="gallery-slide-caption">Espace bureau</div>
+        </div>
+        <div class="gallery-slide" onclick="openLightbox(11)">
+          <img src="assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg" alt="Domotique" loading="lazy">
+          <div class="gallery-slide-caption">Domotique</div>
+        </div>
       </div>
-      <div class="gallery-item" onclick="openLightbox(1)">
-        <img src="assets/images/gallery/DSC01890-HDR.jpg" alt="Suite — Espace de vie" loading="lazy">
-        <div class="gallery-caption">Suite — Espace de vie</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(2)">
-        <img src="assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg" alt="Suite — Dernier étage" loading="lazy">
-        <div class="gallery-caption">Suite — Dernier étage</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(3)">
-        <img src="assets/images/gallery/DSC00237-HDR.jpg" alt="Suite — Coin bureau" loading="lazy">
-        <div class="gallery-caption">Suite — Coin bureau</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(4)">
-        <img src="assets/images/gallery/DSC00368-HDR.jpg" alt="Suite — Chambre" loading="lazy">
-        <div class="gallery-caption">Suite — Chambre</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(5)">
-        <img src="assets/images/gallery/DSC00276-HDR.jpg" alt="Suite — Espace bureau & rangement" loading="lazy">
-        <div class="gallery-caption">Suite — Espace bureau & rangement</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(6)">
-        <img src="assets/images/gallery/BALCON_PRIVE.jpg" alt="Balcon privé avec vue" loading="lazy">
-        <div class="gallery-caption">Balcon privé avec vue</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(7)">
-        <img src="assets/images/gallery/BALCON.jpg" alt="Vue sur le lac depuis le balcon" loading="lazy">
-        <div class="gallery-caption">Vue sur le lac depuis le balcon</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(8)">
-        <img src="assets/images/gallery/CUISINE_TYPE_STUDIOS.jpg" alt="Cuisine équipée" loading="lazy">
-        <div class="gallery-caption">Cuisine équipée</div>
-      </div>
-      <div class="gallery-item" onclick="openLightbox(9)">
-        <img src="assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg" alt="Domotique — Clé digitale" loading="lazy">
-        <div class="gallery-caption">Domotique — Clé digitale</div>
-      </div>
+      <button class="gallery-arrow next" onclick="scrollGallery(1)">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <p class="gallery-counter">← Faites défiler les photos →</p>
     </div>
   </div>
 </div>
@@ -628,16 +684,18 @@ a.gold-link:hover { border-color: var(--gold); }
 <script src="assets/js/config.js"></script>
 <script>
 const galleryData = [
-  { src: "assets/images/gallery/DSC00388-HDR.jpg", caption: "Suite — Vue d'ensemble" },
-  { src: "assets/images/gallery/DSC01890-HDR.jpg", caption: "Suite — Espace de vie" },
-  { src: "assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg", caption: "Suite — Dernier étage" },
-  { src: "assets/images/gallery/DSC00237-HDR.jpg", caption: "Suite — Coin bureau" },
-  { src: "assets/images/gallery/DSC00368-HDR.jpg", caption: "Suite — Chambre" },
-  { src: "assets/images/gallery/DSC00276-HDR.jpg", caption: "Suite — Espace bureau & rangement" },
-  { src: "assets/images/gallery/BALCON_PRIVE.jpg", caption: "Balcon privé avec vue" },
-  { src: "assets/images/gallery/BALCON.jpg", caption: "Vue sur le lac depuis le balcon" },
+  { src: "assets/images/gallery/DJI_20250411085216_0005_D-Enhanced-SR-topaz-denoise-text.jpg", caption: "Vue de l'immeuble" },
+  { src: "assets/images/gallery/DJI_20250411114009_0033_D-Enhanced-SR-topaz-denoise-text.jpg", caption: "Vue aérienne" },
+  { src: "assets/images/gallery/BALCON_PRIVE.jpg", caption: "Balcon privé" },
+  { src: "assets/images/gallery/BALCON.jpg", caption: "Balcon" },
+  { src: "assets/images/gallery/DSC01890-HDR.jpg", caption: "Salon / Espace de vie" },
+  { src: "assets/images/gallery/DSC00388-HDR.jpg", caption: "Vue d'ensemble" },
+  { src: "assets/images/gallery/DSC00237-HDR.jpg", caption: "Cuisine" },
   { src: "assets/images/gallery/CUISINE_TYPE_STUDIOS.jpg", caption: "Cuisine équipée" },
-  { src: "assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg", caption: "Domotique — Clé digitale" }
+  { src: "assets/images/gallery/DSC00368-HDR.jpg", caption: "Chambre" },
+  { src: "assets/images/gallery/DERNIER_ETAGE__2e_me_.jpg", caption: "Dernier étage (2ème)" },
+  { src: "assets/images/gallery/DSC00276-HDR.jpg", caption: "Espace bureau" },
+  { src: "assets/images/gallery/DOMOTIQUE_DANS_STUDIOS_.jpg", caption: "Domotique" }
 ];
 let currentPhoto = 0;
 function openLightbox(idx) {
@@ -719,7 +777,13 @@ window.addEventListener('scroll', () => {
   let current = '';
   sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
   anchorLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
-}, {{ passive: true }});
+}, { passive: true });
+
+function scrollGallery(dir) {
+  const track = document.getElementById('gallery-track');
+  const slide = track.querySelector('.gallery-slide');
+  track.scrollBy({ left: dir * (slide.offsetWidth + 12), behavior: 'smooth' });
+}
 </script>
 </body>
 </html>

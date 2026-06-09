@@ -4,9 +4,10 @@ Réf. TM-2026-AR01 | Taylor Swiss Media Value
 ## Structure du site
 ```
 Attica/
-├── index.html                  ← Page d'accueil (2 boutons : Annuelle / Mensuelle)
+├── index.html                  ← Page d'accueil (3 cartes : Annuelle / Mensuelle / Parking)
 ├── location-annuelle.html      ← Onglet 1 : Studios 24m² (Étudiants EPFL/UNIL)
 ├── location-mensuelle.html     ← Onglet 2 : Suites 45m² (Masters/PhD/Chercheurs)
+├── location-parking.html       ← Onglet 3 : Places de parc (résidents & tiers)
 ├── admin.html                  ← Tableau de bord privé des demandes (login)
 ├── assets/
 │   ├── js/config.js            ← Clés Supabase (à renseigner) — voir SETUP.md
@@ -46,5 +47,5 @@ Tant que `assets/js/config.js` n'est pas renseigné, l'envoi affiche un message
 
 ## À faire (prochaines étapes)
 - Renseigner `assets/js/config.js` et déployer l'Edge Function (voir SETUP.md)
-- Page location-parking.html
+- Ajouter la photo `assets/images/gallery/PARKING_INTERIEUR_11zon.jpg` (hero de la page parking)
 - Textes définitifs Onglet 2 (en attente de Laura)

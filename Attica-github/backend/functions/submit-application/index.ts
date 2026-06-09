@@ -20,7 +20,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Noms de champs de fichiers attendus (tout autre nom -> dossier "misc").
 const ALLOWED_FIELDS = new Set([
-  "piece_identite", "justificatifs_financiers", "extrait_poursuites", "assurance_copie",
+  "piece_identite", "justificatifs_financiers", "justificatifs", "extrait_poursuites", "assurance_copie",
 ]);
 // Signatures binaires (magic bytes) des types réellement acceptés.
 const MAGIC: Array<{ type: string; bytes: number[] }> = [
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     if (String(form.get("_gotcha") ?? "").length > 0) return json({ ok: true });
 
     const type = String(form.get("form_type") ?? "");
-    if (type !== "annuelle" && type !== "mensuelle") {
+    if (type !== "annuelle" && type !== "mensuelle" && type !== "parking") {
       return json({ error: "Type de formulaire invalide" }, 400);
     }
 

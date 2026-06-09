@@ -59,6 +59,7 @@
   .pill{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
   .t-annuelle{background:rgba(168,132,58,.14);color:#7a5f24}
   .t-mensuelle{background:rgba(28,26,23,.08);color:#444}
+  .t-parking{background:rgba(37,99,150,.12);color:#2a5a7a}
   .s-new{background:#e8f0e6;color:#2f6b34}
   .s-reviewing{background:#fff3d6;color:#8a6d12}
   .s-accepted{background:#dcefe0;color:#1f6b3a}
@@ -124,6 +125,7 @@
       <button data-type="all" class="active">Toutes</button>
       <button data-type="annuelle">Annuelle</button>
       <button data-type="mensuelle">Mensuelle</button>
+      <button data-type="parking">Parking</button>
     </div>
     <select class="filter" id="status-filter">
       <option value="all">Tous les statuts</option>
@@ -206,7 +208,9 @@
     reference:"Référence", studio:"Studio souhaité", date_entree:"Date d'entrée",
     date_specifique:"Date précise", garantie:"Forme de garantie", parking:"Parking",
     date_arrivee:"Date d'arrivée", date_depart:"Date de départ", message:"Message",
-    nom2:"Co-titulaire — Nom", prenom2:"Co-titulaire — Prénom", nationalite2:"Co-titulaire — Nationalité", tel2:"Co-titulaire — Tél."
+    nom2:"Co-titulaire — Nom", prenom2:"Co-titulaire — Prénom", nationalite2:"Co-titulaire — Nationalité", tel2:"Co-titulaire — Tél.",
+    type_place:"Type de place", date_debut:"Date de début", plaque:"Plaque d'immatriculation", vehicule:"Véhicule",
+    justificatifs:"Justificatifs financiers", assurance:"Assurance RC + Ménage"
   };
 
   let all = [];

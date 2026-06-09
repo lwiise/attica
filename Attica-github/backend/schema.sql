@@ -8,7 +8,7 @@
 create table if not exists public.applications (
   id              uuid primary key default gen_random_uuid(),
   created_at      timestamptz not null default now(),
-  type            text not null check (type in ('annuelle','mensuelle')),
+  type            text not null check (type in ('annuelle','mensuelle','parking')),
   status          text not null default 'new'
                     check (status in ('new','reviewing','accepted','rejected','archived')),
   applicant_name  text,
