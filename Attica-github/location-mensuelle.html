@@ -915,7 +915,11 @@ async function submitForm(e) {
   const originalHTML = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerHTML = '<span data-fr="Envoi en cours…" data-en="Sending…">Envoi en cours…</span>'; }
   try {
-    const res = await fetch(cfg.SUBMIT_ENDPOINT, { method: 'POST', body: new FormData(form) });
+    const res = await fetch(cfg.SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: cfg.SUPABASE_ANON_KEY ? { apikey: cfg.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + cfg.SUPABASE_ANON_KEY } : {},
+      body: new FormData(form)
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     form.style.display = 'none';
     const ok = document.getElementById('form-success');
