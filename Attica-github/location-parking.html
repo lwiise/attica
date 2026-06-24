@@ -114,6 +114,29 @@ a.gold-link:hover{border-color:var(--gold)}
   .scam-bar{padding:10px 20px}
   .wa-float{bottom:20px;right:20px}
 }
+  /* ============ GUEST TESTIMONIALS CAROUSEL ============ */
+  .tmt-carousel{position:relative;max-width:1200px;margin:40px auto 0;padding:0 48px;}
+  .tmt-track{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 6px;}
+  .tmt-track::-webkit-scrollbar{display:none;}
+  .tmt-card{flex:0 0 calc((100% - 48px)/3);scroll-snap-align:start;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);padding:32px 30px 28px;position:relative;min-height:100%;}
+  .tmt-card::before{content:"\201C";position:absolute;top:14px;right:22px;font-family:'Cormorant Garamond',serif;font-size:64px;line-height:1;font-style:italic;color:var(--gold);opacity:.14;pointer-events:none;}
+  .tmt-stars{display:flex;gap:3px;color:var(--gold);margin-bottom:16px;}
+  .tmt-stars svg{width:15px;height:15px;fill:currentColor;display:block;}
+  .tmt-review-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:20px;line-height:1.25;color:var(--gold);margin-bottom:12px;}
+  .tmt-quote{font-family:'Jost',sans-serif;font-weight:300;font-size:15px;line-height:1.7;color:var(--dark);margin-bottom:22px;flex:1 0 auto;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
+  .tmt-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
+  .tmt-name{font-family:'Jost',sans-serif;font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--dark);}
+  .tmt-date{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  .tmt-arrow{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .3s;box-shadow:0 4px 18px rgba(0,0,0,.12);padding:0;}
+  .tmt-arrow:hover{background:var(--gold);border-color:var(--gold);}
+  .tmt-arrow:hover svg{stroke:#fff;}
+  .tmt-arrow:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+  .tmt-arrow svg{width:20px;height:20px;stroke:var(--dark);stroke-width:1.5;fill:none;}
+  .tmt-arrow.prev{left:6px;} .tmt-arrow.next{right:6px;}
+  .tmt-intro{font-size:15px;font-weight:300;line-height:1.7;color:var(--muted);margin:-12px 0 8px;max-width:620px;}
+  @media(max-width:1023px){.tmt-card{flex:0 0 calc((100% - 24px)/2);}}
+  @media(max-width:639px){.tmt-carousel{padding:0 20px;margin-top:28px;}.tmt-track{gap:16px;}.tmt-card{flex:0 0 calc(100% - 8px);padding:26px 24px 24px;}.tmt-arrow{width:42px;height:42px;}.tmt-arrow.prev{left:2px;}.tmt-arrow.next{right:2px;}}
+  @media(prefers-reduced-motion:reduce){.tmt-track{scroll-behavior:auto;}}
 </style>
 </head>
 <body>
@@ -150,6 +173,7 @@ a.gold-link:hover{border-color:var(--gold)}
 <!-- ANCHOR NAV -->
 <div class="anchor-nav">
   <a class="anchor-link" href="#presentation" data-fr="Présentation" data-en="Overview">Présentation</a>
+  <a class="anchor-link" href="#temoignages" data-fr="Témoignages" data-en="Testimonials">Témoignages</a>
   <a class="anchor-link" href="#prix" data-fr="Prix" data-en="Pricing">Prix</a>
   <a class="anchor-link" href="#formulaire" data-fr="Formulaire" data-en="Form">Formulaire</a>
 </div>
@@ -167,7 +191,75 @@ a.gold-link:hover{border-color:var(--gold)}
 </div>
 
 <!-- PRIX -->
-<div class="section" id="prix">
+<!-- SECTION — TÉMOIGNAGES -->
+<div class="section" id="temoignages" style="background:var(--section-bg);">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Témoignages" data-en="Testimonials">Témoignages</p>
+    <h2 class="section-title" data-fr="Ce que disent<br><em>nos résidents</em>" data-en="What our<br><em>residents say</em>">Ce que disent<br><em>nos résidents</em></h2>
+    <p class="tmt-intro" data-fr="Étudiants, doctorants et professionnels en séjour : leurs retours après un passage à la résidence." data-en="Students, PhD candidates and visiting professionals — their feedback after a stay at the residence.">Étudiants, doctorants et professionnels en séjour : leurs retours après un passage à la résidence.</p>
+  </div>
+  <div class="tmt-carousel">
+    <button class="tmt-arrow prev" type="button" onclick="scrollTmt(-1)" aria-label="Témoignages précédents" aria-controls="tmt-track">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="tmt-track" id="tmt-track" tabindex="0" role="group" aria-roledescription="carrousel" aria-label="Témoignages de résidents">
+
+      <figure class="tmt-card">
+        <div class="tmt-stars" role="img" aria-label="5 / 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg></div>
+        <h3 class="tmt-review-title" data-fr="Une expérience de séjour formidable" data-en="Great stay experience">Une expérience de séjour formidable</h3>
+        <blockquote class="tmt-quote" data-fr="Emplacement idéal pour l'UNIL et l'EPFL, avec une belle vue sur le lac et les montagnes, et un calme absolu. Tout dans le studio était fonctionnel et confortable. La gérance mérite une mention spéciale — exceptionnellement attentive et prévenante. Un service rare qui justifie à lui seul les cinq étoiles." data-en="Great location for UNIL and EPFL, with beautiful views of the lake and mountains and complete quiet throughout. Everything in the studio was functional and comfortable. The manager deserves a special mention — exceptionally attentive and thoughtful. Service this rare is worth the five stars on its own.">Emplacement idéal pour l'UNIL et l'EPFL, avec une belle vue sur le lac et les montagnes, et un calme absolu. Tout dans le studio était fonctionnel et confortable. La gérance mérite une mention spéciale — exceptionnellement attentive et prévenante. Un service rare qui justifie à lui seul les cinq étoiles.</blockquote>
+        <figcaption class="tmt-foot">
+          <span class="tmt-name">Baris O</span>
+          <span class="tmt-date" data-fr="Mai 2026" data-en="May 2026">Mai 2026</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tmt-card">
+        <div class="tmt-stars" role="img" aria-label="5 / 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg></div>
+        <h3 class="tmt-review-title" data-fr="Une très belle expérience" data-en="A very beautiful experience">Une très belle expérience</h3>
+        <blockquote class="tmt-quote" data-fr="La Résidence Attica, aux portes de Lausanne, offre un cadre de vie exceptionnellement confortable, à la fois moderne et raffiné. On y profite d'un calme absolu, le lac à trois minutes à pied. Ce qui ressort le plus, c'est la qualité du service et l'engagement constant de la résidence, incarné par Madame Laura Boscacci — toujours disponible, attentive et efficace, trouvant une solution à chaque demande." data-en="The Attica Residence, at the gates of Lausanne, offers an exceptionally comfortable living environment, both modern and refined. One enjoys absolute calm, the lake just three minutes away on foot. What stands out most is the quality of service and the residence's constant commitment, embodied by Mrs. Laura Boscacci — always available, attentive and efficient, finding a solution to every request.">La Résidence Attica, aux portes de Lausanne, offre un cadre de vie exceptionnellement confortable, à la fois moderne et raffiné. On y profite d'un calme absolu, le lac à trois minutes à pied. Ce qui ressort le plus, c'est la qualité du service et l'engagement constant de la résidence, incarné par Madame Laura Boscacci — toujours disponible, attentive et efficace, trouvant une solution à chaque demande.</blockquote>
+        <figcaption class="tmt-foot">
+          <span class="tmt-name">Damien D</span>
+          <span class="tmt-date" data-fr="Mai 2026" data-en="May 2026">Mai 2026</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tmt-card">
+        <div class="tmt-stars" role="img" aria-label="5 / 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg></div>
+        <h3 class="tmt-review-title" data-fr="Très confortable, très pratique" data-en="Very comfortable, very convenient">Très confortable, très pratique</h3>
+        <blockquote class="tmt-quote" data-fr="Une excellente option pour être proche de l'EPFL tout en ayant du confort — environ 10 minutes à pied jusqu'à Piccard et 20 jusqu'à l'autre extrémité de l'EPFL. Nous avons passé un excellent séjour ; l'appartement est neuf et très confortable. On peut y travailler et même recevoir à dîner à deux ou trois." data-en="A great option if you want to be close to EPFL with some comfort — about a 10-minute walk to Piccard and 20 to the far side of EPFL. We had a great stay; the apartment is new and very comfortable. You can work there and even host a dinner for two or three.">Une excellente option pour être proche de l'EPFL tout en ayant du confort — environ 10 minutes à pied jusqu'à Piccard et 20 jusqu'à l'autre extrémité de l'EPFL. Nous avons passé un excellent séjour ; l'appartement est neuf et très confortable. On peut y travailler et même recevoir à dîner à deux ou trois.</blockquote>
+        <figcaption class="tmt-foot">
+          <span class="tmt-name">JordiMarca</span>
+          <span class="tmt-date" data-fr="Novembre 2025" data-en="November 2025">Novembre 2025</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tmt-card">
+        <div class="tmt-stars" role="img" aria-label="5 / 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg></div>
+        <h3 class="tmt-review-title" data-fr="Emplacement idéal pour les étudiants de l'EPFL" data-en="Great location for EPFL students">Emplacement idéal pour les étudiants de l'EPFL</h3>
+        <blockquote class="tmt-quote" data-fr="Un séjour extrêmement confortable, propre et idéalement situé. Madame Laura a été très attentive et a répondu rapidement à nos questions. Je le recommande vivement." data-en="An extremely comfortable, clean and well-located stay. Madame Laura was very attentive and answered our questions quickly. I highly recommend it.">Un séjour extrêmement confortable, propre et idéalement situé. Madame Laura a été très attentive et a répondu rapidement à nos questions. Je le recommande vivement.</blockquote>
+        <figcaption class="tmt-foot">
+          <span class="tmt-name">Alpkap</span>
+          <span class="tmt-date" data-fr="Septembre 2025" data-en="September 2025">Septembre 2025</span>
+        </figcaption>
+      </figure>
+
+      <figure class="tmt-card">
+        <div class="tmt-stars" role="img" aria-label="5 / 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.95 6.05L21.6 9l-4.8 4.68 1.13 6.6L12 17.27 6.07 20.3l1.13-6.6L2.4 9l6.65-.95z"/></svg></div>
+        <h3 class="tmt-review-title" data-fr="Emplacement parfait et impeccable" data-en="Perfect location and spotless">Emplacement parfait et impeccable</h3>
+        <blockquote class="tmt-quote" data-fr="Transports pratiques, avec un arrêt de bus juste devant. Proche du lac et de quelques restaurants — parfait pour un séjour calme et détendu. Nous avons adoré notre séjour." data-en="Convenient transport, with a bus stop right out front. Close to the lake and a few restaurants — perfect for a quiet, relaxed stay. We enjoyed it so much.">Transports pratiques, avec un arrêt de bus juste devant. Proche du lac et de quelques restaurants — parfait pour un séjour calme et détendu. Nous avons adoré notre séjour.</blockquote>
+        <figcaption class="tmt-foot">
+          <span class="tmt-name">Heidi K</span>
+          <span class="tmt-date" data-fr="Juillet 2023" data-en="July 2023">Juillet 2023</span>
+        </figcaption>
+      </figure>
+
+    </div>
+    <button class="tmt-arrow next" type="button" onclick="scrollTmt(1)" aria-label="Témoignages suivants" aria-controls="tmt-track">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<div class="section" id="prix" style="background:#fff;">
   <div class="container">
     <p class="section-eyebrow" data-fr="Prix" data-en="Pricing">Prix</p>
     <h2 class="section-title" data-fr="Tarifs mensuels pour non résidents<br><em>tout compris</em>" data-en="Monthly rates for non-residents<br><em>all inclusive</em>">Tarifs mensuels pour non résidents<br><em>tout compris</em></h2>
@@ -196,7 +288,7 @@ a.gold-link:hover{border-color:var(--gold)}
 </div>
 
 <!-- FORMULAIRE -->
-<div class="section" id="formulaire">
+<div class="section" id="formulaire" style="background:var(--section-bg);">
   <div class="container">
     <p class="section-eyebrow" data-fr="Formulaire" data-en="Form">Formulaire</p>
     <h2 class="section-title" data-fr="Demande de<br><em>location de parking</em>" data-en="Parking<br><em>rental application</em>">Demande de<br><em>location de parking</em></h2>
@@ -425,6 +517,13 @@ const scamTexts = {
   fr: '<strong>Prudence aux arnaques :</strong> Les demandes ne peuvent être traitées que par Attica Résidences ou Segurimmo. Méfiez-vous de tout intermédiaire sollicitant un paiement.',
   en: '<strong>Beware of scams:</strong> Applications can only be processed by Attica Résidences or Segurimmo. Beware of any third party requesting payment.'
 };
+function scrollTmt(dir){
+  const track=document.getElementById('tmt-track'); if(!track) return;
+  const card=track.querySelector('.tmt-card'); if(!card) return;
+  const cs=getComputedStyle(track); const gap=parseInt(cs.columnGap||cs.gap,10)||24;
+  track.scrollBy({left:dir*(card.offsetWidth+gap),behavior:'smooth'});
+}
+
 function setLang(lang) {
   document.querySelectorAll('[data-fr]').forEach(el => { el.innerHTML = el.getAttribute('data-' + lang); });
   document.getElementById('scam-text').innerHTML = scamTexts[lang];
