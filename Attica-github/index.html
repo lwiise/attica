@@ -316,6 +316,11 @@
     /* BG LINES */
     .bg-line-top { top: 60px; }
   }
+  /* Back-to-main-site floating button */
+  .home-float{position:fixed;left:32px;bottom:50px;z-index:400;display:inline-flex;align-items:center;gap:9px;padding:11px 18px;background:var(--dark);color:#fff;text-decoration:none;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:.18em;text-transform:uppercase;border-radius:2px;box-shadow:0 6px 22px rgba(0,0,0,.2);transition:background .3s,transform .3s;}
+  .home-float:hover{background:var(--gold);transform:translateY(-1px);}
+  .home-float svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0;}
+  @media(max-width:600px){.home-float{padding:9px 13px;font-size:10px;letter-spacing:.12em;left:16px;bottom:60px;}}
 </style>
 </head>
 <body>
@@ -397,6 +402,12 @@
     <strong>Prudence aux arnaques :</strong> Les demandes de location ne peuvent être traitées que par Attica Résidences ou Segurimmo. Méfiez-vous de tout intermédiaire sollicitant un paiement.
   </p>
 </div>
+
+<!-- Back to main site -->
+<a class="home-float" href="https://www.atticaresidences.ch/en">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+  <span data-fr="Retour à l'accueil" data-en="Back to the home page">Retour à l'accueil</span>
+</a>
 
 <a class="wa-float" href="https://wa.me/41796381790" target="_blank" rel="noopener" aria-label="Contacter via WhatsApp">
   <svg viewBox="0 0 24 24" aria-hidden="true">

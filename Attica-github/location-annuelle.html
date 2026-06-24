@@ -451,6 +451,11 @@ a.gold-link:hover { border-color: var(--gold); }
   @media(max-width:1023px){.tmt-card{flex:0 0 calc((100% - 24px)/2);}}
   @media(max-width:639px){.tmt-carousel{padding:0 20px;margin-top:28px;}.tmt-track{gap:16px;}.tmt-card{flex:0 0 calc(100% - 8px);padding:26px 24px 24px;}.tmt-arrow{width:42px;height:42px;}.tmt-arrow.prev{left:2px;}.tmt-arrow.next{right:2px;}}
   @media(prefers-reduced-motion:reduce){.tmt-track{scroll-behavior:auto;}}
+  /* Back-to-main-site floating button */
+  .home-float{position:fixed;left:32px;bottom:32px;z-index:400;display:inline-flex;align-items:center;gap:9px;padding:11px 18px;background:var(--dark);color:#fff;text-decoration:none;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:.18em;text-transform:uppercase;border-radius:2px;box-shadow:0 6px 22px rgba(0,0,0,.2);transition:background .3s,transform .3s;}
+  .home-float:hover{background:var(--gold);transform:translateY(-1px);}
+  .home-float svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0;}
+  @media(max-width:600px){.home-float{padding:9px 13px;font-size:10px;letter-spacing:.12em;left:16px;bottom:16px;}}
 </style>
 </head>
 <body>
@@ -898,8 +903,8 @@ a.gold-link:hover { border-color: var(--gold); }
         <span class="pricing-value">CHF 120.– /mois</span>
       </div>
       <div class="pricing-row">
-        <span class="pricing-label" data-fr="Forfait de sortie (nettoyage professionnel)" data-en="Check-out fee (professional cleaning)">Forfait de sortie (nettoyage professionnel)</span>
-        <span class="pricing-value">CHF 350.– unique</span>
+        <span class="pricing-label" data-fr="FORFAIT DE SORTIE (nettoyage professionnel de l'appartement et de la literie)" data-en="CHECK-OUT PACKAGE (professional cleaning of the apartment and bedding)">FORFAIT DE SORTIE (nettoyage professionnel de l'appartement et de la literie)</span>
+        <span class="pricing-value" data-fr="CHF 650.– unique" data-en="CHF 650.– one-time">CHF 650.– unique</span>
       </div>
     </div>
   </div>
@@ -1199,6 +1204,12 @@ a.gold-link:hover { border-color: var(--gold); }
 </div>
 
 <!-- WA FLOAT -->
+<!-- Back to main site -->
+<a class="home-float" href="https://www.atticaresidences.ch/en">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+  <span data-fr="Retour à l'accueil" data-en="Back to the home page">Retour à l'accueil</span>
+</a>
+
 <a class="wa-float" href="https://wa.me/41796381790" target="_blank" rel="noopener" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.093.541 4.063 1.487 5.779L0 24l6.396-1.677A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.367l-.36-.214-3.726.977.994-3.635-.234-.374A9.794 9.794 0 012.182 12C2.182 6.573 6.573 2.182 12 2.182c5.427 0 9.818 4.391 9.818 9.818 0 5.427-4.391 9.818-9.818 9.818z"/></svg>
 </a>
