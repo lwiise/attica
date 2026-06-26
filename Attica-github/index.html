@@ -406,7 +406,7 @@
 <!-- Back to main site -->
 <a class="home-float" href="https://www.atticaresidences.ch/en">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-  <span data-fr="Retour à l'accueil" data-en="Back to the home page">Retour à l'accueil</span>
+  <span data-fr="Retour au site Hôtellerie" data-en="Back to hotel website">Retour au site Hôtellerie</span>
 </a>
 
 <a class="wa-float" href="https://wa.me/41796381790" target="_blank" rel="noopener" aria-label="Contacter via WhatsApp">
@@ -441,6 +441,18 @@ function setLang(lang) {
 (function() {
   const saved = localStorage.getItem('attica-lang');
   if (saved && saved !== 'fr') setLang(saved);
+})();
+// Hidden link: the centered hero logo redirects to the hotel site
+(function(){
+  var hl=document.querySelector('.hero-logo');
+  if(hl && hl.parentNode && !hl.closest('a')){
+    var a=document.createElement('a');
+    a.href='https://www.atticaresidences.ch/en';
+    a.setAttribute('aria-label','Attica Résidences');
+    a.style.cssText='display:block;text-align:center;line-height:0';
+    hl.parentNode.insertBefore(a,hl);
+    a.appendChild(hl);
+  }
 })();
 </script>
 </body>
