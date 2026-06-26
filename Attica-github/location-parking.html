@@ -142,7 +142,13 @@ a.gold-link:hover{border-color:var(--gold)}
   .home-float:hover{background:var(--gold);transform:translateY(-1px);}
   .home-float svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0;}
   @media(max-width:600px){.home-float{padding:9px 13px;font-size:10px;letter-spacing:.12em;left:16px;bottom:16px;}}
-</style>
+  /* MAP SECTION */
+  .section{scroll-margin-top:90px;}
+  .map-address{font-size:15px;font-weight:300;line-height:1.7;color:var(--muted);}
+  .map-frame{margin-top:28px;border:1px solid var(--border);height:clamp(320px,52vh,470px);overflow:hidden;background:#f0ede8;}
+  .map-frame iframe{display:block;width:100%;height:100%;}
+  .map-link{display:inline-block;margin-top:18px;font-size:12px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:3px;transition:border-color .3s;}
+  .map-link:hover{border-color:var(--gold);}</style>
 </head>
 <body>
 
@@ -178,7 +184,8 @@ a.gold-link:hover{border-color:var(--gold)}
 <!-- ANCHOR NAV -->
 <div class="anchor-nav">
   <a class="anchor-link" href="#presentation" data-fr="Présentation" data-en="Overview">Présentation</a>
-  <a class="anchor-link" href="#temoignages" data-fr="Témoignages" data-en="Testimonials">Témoignages</a>
+  <a class="anchor-link" href="#temoignages" data-fr="Avis" data-en="Reviews">Avis</a>
+  <a class="anchor-link" href="#map" data-fr="Carte" data-en="Map">Carte</a>
   <a class="anchor-link" href="#prix" data-fr="Prix" data-en="Pricing">Prix</a>
   <a class="anchor-link" href="#formulaire" data-fr="Formulaire" data-en="Form">Formulaire</a>
 </div>
@@ -199,7 +206,7 @@ a.gold-link:hover{border-color:var(--gold)}
 <!-- SECTION — TÉMOIGNAGES -->
 <div class="section" id="temoignages" style="background:var(--section-bg);">
   <div class="container">
-    <p class="section-eyebrow" data-fr="Témoignages" data-en="Testimonials">Témoignages</p>
+    <p class="section-eyebrow" data-fr="Avis" data-en="Reviews">Avis</p>
     <h2 class="section-title" data-fr="Ce que disent<br><em>nos résidents</em>" data-en="What our<br><em>residents say</em>">Ce que disent<br><em>nos résidents</em></h2>
     <p class="tmt-intro" data-fr="Étudiants, doctorants et professionnels en séjour : leurs retours après un passage à la résidence." data-en="Students, PhD candidates and visiting professionals — their feedback after a stay at the residence.">Étudiants, doctorants et professionnels en séjour : leurs retours après un passage à la résidence.</p>
   </div>
@@ -261,6 +268,19 @@ a.gold-link:hover{border-color:var(--gold)}
     </div>
     <button class="tmt-arrow next" type="button" onclick="scrollTmt(1)" aria-label="Témoignages suivants" aria-controls="tmt-track">
       <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- SECTION — CARTE / MAP -->
+<div class="section" id="map" style="background:#fff;">
+  <div class="container">
+    <p class="section-eyebrow" data-fr="Carte" data-en="Map">Carte</p>
+    <h2 class="section-title" data-fr="Notre <em>emplacement</em>" data-en="Our <em>location</em>">Notre <em>emplacement</em></h2>
+    <p class="map-address" data-fr="Route Cantonale 19, 1025 St-Sulpice, Suisse — face à l'EPFL / UNIL" data-en="Route Cantonale 19, 1025 St-Sulpice, Switzerland — opposite EPFL / UNIL">Route Cantonale 19, 1025 St-Sulpice, Suisse — face à l'EPFL / UNIL</p>
+    <div class="map-frame">
+      <iframe title="Carte satellite — Attica Résidences, Route Cantonale 19, St-Sulpice" src="https://maps.google.com/maps?q=Route%20Cantonale%2019,%201025%20St-Sulpice,%20Switzerland&amp;t=k&amp;z=17&amp;hl=fr&amp;ie=UTF8&amp;output=embed" width="100%" height="100%" style="border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+    <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Route%20Cantonale%2019%2C%201025%20St-Sulpice%2C%20Switzerland" target="_blank" rel="noopener" data-fr="Itinéraire sur Google Maps →" data-en="Directions on Google Maps →">Itinéraire sur Google Maps →</a>
   </div>
 </div>
 
