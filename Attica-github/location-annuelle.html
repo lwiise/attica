@@ -1351,6 +1351,7 @@ async function submitForm(e) {
   e.preventDefault();
   const form = document.getElementById('rental-form');
   const btn = form.querySelector('.form-submit');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
   const cfg = window.ATTICA_CONFIG || {};
   if (!cfg.SUBMIT_ENDPOINT || cfg.SUBMIT_ENDPOINT.indexOf('VOTRE-PROJET') !== -1) {
     alert('Configuration manquante : renseignez assets/js/config.js avant la mise en ligne.');
