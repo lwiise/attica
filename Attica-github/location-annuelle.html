@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="assets/images/logo-nav.png">
 <title>Location Annuelle — Studios 24m² | Attica Résidences</title>
 <meta name="description" content="Studios meublés de standing à St-Sulpice, face à l'EPFL et l'UNIL. Bail annuel renouvelable, toutes charges comprises.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1355,6 +1356,13 @@ async function submitForm(e) {
     alert('Configuration manquante : renseignez assets/js/config.js avant la mise en ligne.');
     return;
   }
+  const lang = (localStorage.getItem('attica-lang') === 'en') ? 'en' : 'fr';
+  const _files = [].concat(...[...form.querySelectorAll('input[type=file]')].map(i => [...i.files]));
+  const _big = _files.find(f => f.size > 10 * 1024 * 1024);
+  if (_big) { alert(lang === 'en' ? `The file "${_big.name}" exceeds 10 MB. Please compress it and try again.` : `Le fichier "${_big.name}" dépasse 10 Mo. Merci de le compresser puis de réessayer.`); return; }
+  if (_files.length > 25) { alert(lang === 'en' ? 'Too many files (max 25).' : 'Trop de fichiers (maximum 25).'); return; }
+  const _bad = _files.find(f => !/\.(pdf|jpe?g|png)$/i.test(f.name));
+  if (_bad) { alert(lang === 'en' ? `"${_bad.name}" must be a PDF, JPG or PNG.` : `"${_bad.name}" doit être un PDF, JPG ou PNG.`); return; }
   const originalHTML = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.innerHTML = '<span data-fr="Envoi en cours…" data-en="Sending…">Envoi en cours…</span>'; }
   try {
@@ -1363,14 +1371,19 @@ async function submitForm(e) {
       headers: cfg.SUPABASE_ANON_KEY ? { apikey: cfg.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + cfg.SUPABASE_ANON_KEY } : {},
       body: new FormData(form)
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) {
+      let serverMsg = '';
+      try { const data = await res.json(); if (data && data.error) serverMsg = data.error; } catch (_) {}
+      throw new Error(serverMsg || ('HTTP ' + res.status));
+    }
     form.style.display = 'none';
     const ok = document.getElementById('form-success');
     ok.style.display = 'block';
     ok.scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (err) {
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.innerHTML = originalHTML; }
-    alert("Une erreur s'est produite lors de l'envoi de votre demande. Merci de réessayer, ou de nous contacter par WhatsApp.");
+    const detail = (err && err.message) ? err.message : '';
+    alert((lang === 'en' ? 'An error occurred while sending your application.' : "Une erreur s'est produite lors de l'envoi de votre demande.") + (detail ? '\n\n(' + detail + ')' : '') + (lang === 'en' ? '\n\nPlease try again or contact us on WhatsApp.' : '\n\nMerci de réessayer ou de nous contacter par WhatsApp.'));
   }
 }
 
