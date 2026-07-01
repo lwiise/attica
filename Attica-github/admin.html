@@ -91,6 +91,10 @@
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .saved{font-size:12px;color:#2f6b34;opacity:0;transition:opacity .2s}
   .saved.show{opacity:1}
+  /* ---- Export bar ---- */
+  .exportbar{display:flex;gap:8px;margin-top:14px}
+  .exportbar .btn{padding:8px 16px;font-size:11px}
+  .exportbar .btn[disabled],#export-all[disabled]{opacity:.5;cursor:progress;pointer-events:none}
 </style>
 </head>
 <body>
@@ -137,6 +141,7 @@
     </select>
     <input class="search" id="search" type="search" placeholder="Rechercher (nom, email…)">
     <span class="count" id="count"></span>
+    <button class="btn ghost" id="export-all" type="button">Exporter tout (Excel)</button>
   </div>
 
   <div class="list">
@@ -157,6 +162,10 @@
     <button class="x" id="close-drawer">&times;</button>
     <h2 id="d-name"></h2>
     <div class="meta" id="d-meta"></div>
+    <div class="exportbar">
+      <button class="btn ghost" id="d-pdf" type="button">PDF</button>
+      <button class="btn ghost" id="d-xlsx" type="button">Excel</button>
+    </div>
   </div>
   <div class="dsection">
     <h3>Statut &amp; suivi</h3>
@@ -248,12 +257,7 @@
 
   function render(){
     const tbody = $("rows"); tbody.innerHTML = "";
-    const q = state.q.toLowerCase();
-    const list = all.filter(a =>
-      (state.type === "all" || a.type === state.type) &&
-      (state.status === "all" || a.status === state.status) &&
-      (!q || [a.applicant_name, a.applicant_email, a.applicant_phone].join(" ").toLowerCase().includes(q))
-    );
+    const list = filtered();
     $("count").textContent = list.length + " demande" + (list.length>1?"s":"");
     $("empty").classList.toggle("hidden", list.length>0);
     for (const a of list){
@@ -337,6 +341,225 @@
   $("search").addEventListener("input", e => { state.q = e.target.value; render(); });
 
   function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  // ============ EXPORT (PDF / Excel) ============
+  // Lazy-load CDN libs on first use; SRI-pinned, crossorigin, cached per URL.
+  const _loaded = new Map();
+  function loadOnce(url, integrity){
+    if (_loaded.has(url)) return _loaded.get(url);
+    const p = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = url; if (integrity) s.integrity = integrity;
+      s.crossOrigin = "anonymous"; s.referrerPolicy = "no-referrer"; s.async = true;
+      s.onload = () => resolve();
+      s.onerror = () => { _loaded.delete(url); reject(new Error("Échec du chargement : " + url)); };
+      document.head.appendChild(s);
+    });
+    _loaded.set(url, p); return p;
+  }
+  const LIB = {
+    jspdf:     { url:"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+                 sri:"sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" },
+    autotable: { url:"https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
+                 sri:"sha384-fCAW/rDWORTbQXSiB7mOg0QtQ5c+r0f544y6XoKjuVva0nMBlCpNUjiFeG5iMdS3" },
+    xlsx:      { url:"https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+                 sri:"sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" }
+  };
+  async function ensureJsPdf(){ await loadOnce(LIB.jspdf.url, LIB.jspdf.sri); await loadOnce(LIB.autotable.url, LIB.autotable.sri); }
+  function ensureXlsx(){ return loadOnce(LIB.xlsx.url, LIB.xlsx.sri); }
+
+  // ---- Helpers ----
+  function pdfText(s){
+    if (s == null) return "";
+    return String(s)
+      .replace(/[—–‒‐‑]/g, "-")
+      .replace(/[‘’‚‛]/g, "'")
+      .replace(/[“”„‟]/g, '"')
+      .replace(/…/g, "...")
+      .replace(/[  ]/g, " ")
+      .replace(/[•●·]/g, "-")
+      .replace(/[^\x00-\xFF]/g, "");
+  }
+  function slug(s){
+    return String(s || "candidat").normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 60) || "candidat";
+  }
+  function today(){ const d=new Date(), p=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
+  function blobToDataURL(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>rej(r.error||new Error("FileReader")); r.readAsDataURL(blob); }); }
+  function imgSize(dataURL){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res({w:im.naturalWidth||im.width,h:im.naturalHeight||im.height}); im.onerror=()=>rej(new Error("Image decode failed")); im.src=dataURL; }); }
+  const FIELD_ORDER = Object.keys(FIELD_LABELS);
+  function orderedFields(dataObj){
+    const data = dataObj || {}, seen = new Set(), out = [];
+    for (const k of FIELD_ORDER){ if (k in data && data[k]!=null && data[k]!=="") { out.push([k,data[k]]); seen.add(k); } }
+    for (const k of Object.keys(data)){ if (!seen.has(k) && data[k]!=null && data[k]!=="") out.push([k,data[k]]); }
+    return out;
+  }
+  function labelFor(k){ return FIELD_LABELS[k] || k; }
+  function typeLabel(t){ return ({annuelle:"Annuelle",mensuelle:"Mensuelle",parking:"Parking"})[t] || (t||""); }
+  function fmtDate(iso){ if(!iso) return ""; const d=new Date(iso); return isNaN(d)?String(iso):d.toLocaleDateString("fr-CH",{day:"2-digit",month:"2-digit",year:"numeric"}); }
+  function fmtSize(b){ if(b==null||b==="") return ""; return b<1024 ? b+" o" : Math.round(b/1024)+" Ko"; }
+  function valToStr(v){ if(Array.isArray(v)) return v.join(", "); if(v&&typeof v==="object") return JSON.stringify(v); return String(v); }
+  function isImageFile(f){ const t=(f.type||"").toLowerCase(), n=(f.name||"").toLowerCase(); return t==="image/jpeg"||t==="image/jpg"||t==="image/png"||/\.(jpe?g|png)$/.test(n); }
+  function splitName(full){ const p=String(full||"").trim().split(/\s+/); if(p.length<=1) return {nom:p[0]||"",prenom:""}; return {prenom:p.slice(0,-1).join(" "),nom:p[p.length-1]}; }
+  function setBusy(btn,label){ if(!btn) return ()=>{}; const prev=btn.textContent; btn.setAttribute("disabled",""); btn.textContent=label; return ()=>{ btn.removeAttribute("disabled"); btn.textContent=prev; }; }
+  function filtered(){
+    const q = state.q.toLowerCase();
+    return all.filter(a =>
+      (state.type==="all" || a.type===state.type) &&
+      (state.status==="all" || a.status===state.status) &&
+      (!q || [a.applicant_name,a.applicant_email,a.applicant_phone].join(" ").toLowerCase().includes(q))
+    );
+  }
+
+  // ---- PDF helpers ----
+  function sectionTitle(doc,txt,x,y,gold){ doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(gold[0],gold[1],gold[2]); doc.text(pdfText(txt.toUpperCase()),x,y); doc.setTextColor(28,26,23); return y+16; }
+  function ensureSpace(doc,y,needed,margin){ const PH=doc.internal.pageSize.getHeight(); if(y+needed>PH-margin){ doc.addPage(); return 56; } return y; }
+  function stampFooter(doc,muted){
+    const n=doc.internal.getNumberOfPages(), PW=doc.internal.pageSize.getWidth(), PH=doc.internal.pageSize.getHeight();
+    const gen=pdfText("Généré le "+new Date().toLocaleDateString("fr-CH",{day:"2-digit",month:"2-digit",year:"numeric"}));
+    for(let i=1;i<=n;i++){ doc.setPage(i); doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(muted[0],muted[1],muted[2]);
+      doc.text(gen,48,PH-24); doc.text(pdfText("Page "+i+" / "+n),PW-48,PH-24,{align:"right"}); }
+  }
+
+  // ---- PDF: per-applicant dossier ----
+  async function exportApplicantPdf(){
+    if(!current) return;
+    const a=current, restore=setBusy($("d-pdf"),"PDF…");
+    try{
+      await ensureJsPdf();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({unit:"pt",format:"a4"});
+      const GOLD=[168,132,58], DARK=[28,26,23], MUTED=[120,110,95];
+      const M=48, PW=doc.internal.pageSize.getWidth(), PH=doc.internal.pageSize.getHeight(), CW=PW-M*2;
+
+      doc.setTextColor(DARK[0],DARK[1],DARK[2]); doc.setFont("times","normal"); doc.setFontSize(22);
+      doc.text(pdfText("Attica Résidences"),M,60);
+      doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(MUTED[0],MUTED[1],MUTED[2]);
+      doc.text(pdfText("DOSSIER DE CANDIDATURE"),M,76);
+      doc.setDrawColor(GOLD[0],GOLD[1],GOLD[2]); doc.setLineWidth(1.4); doc.line(M,86,PW-M,86);
+
+      doc.setTextColor(DARK[0],DARK[1],DARK[2]); doc.setFont("times","normal"); doc.setFontSize(18);
+      doc.text(pdfText(a.applicant_name||a.applicant_email||"Demande"),M,116);
+      doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(MUTED[0],MUTED[1],MUTED[2]);
+      doc.text(pdfText(["Type : "+typeLabel(a.type),"Déposée le : "+fmtDate(a.created_at),"Statut : "+(STATUS_LABELS[a.status]||a.status||"")].join("     ")),M,134);
+      const contact=[a.applicant_email,a.applicant_phone].filter(Boolean).join("  -  ");
+      if(contact) doc.text(pdfText(contact),M,150);
+
+      const _fieldRows = orderedFields(a.data).map(([k,v])=>[pdfText(labelFor(k)),pdfText(valToStr(v))]);
+      doc.autoTable({
+        startY:168, head:[["Champ","Valeur"]],
+        body: _fieldRows.length ? _fieldRows : [["-","-"]],
+        margin:{left:M,right:M},
+        styles:{font:"helvetica",fontSize:9,cellPadding:5,textColor:DARK,overflow:"linebreak",lineColor:[230,224,213],lineWidth:0.5},
+        headStyles:{fillColor:GOLD,textColor:[255,255,255],fontStyle:"bold",halign:"left"},
+        columnStyles:{0:{cellWidth:160,textColor:MUTED},1:{cellWidth:CW-160}}, theme:"grid"
+      });
+
+      let y=doc.lastAutoTable.finalY+24;
+      y=sectionTitle(doc,"Notes internes",M,y,GOLD);
+      doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(DARK[0],DARK[1],DARK[2]);
+      const wrapped=doc.splitTextToSize(pdfText(a.notes||"-"),CW);
+      y=ensureSpace(doc,y,wrapped.length*13+8,M); doc.text(wrapped,M,y); y+=wrapped.length*13+16;
+
+      const files=Array.isArray(a.files)?a.files:[];
+      y=ensureSpace(doc,y,44,M); sectionTitle(doc,"Documents",M,y,GOLD);
+      doc.autoTable({
+        startY:y+8, head:[["Champ","Fichier","Type","Taille"]],
+        body: files.length ? files.map(f=>[pdfText(labelFor(f.field)),pdfText(f.name||""),pdfText(f.type||""),fmtSize(f.size)]) : [["-","Aucun document","",""]],
+        margin:{left:M,right:M},
+        styles:{font:"helvetica",fontSize:9,cellPadding:5,textColor:DARK,overflow:"linebreak",lineColor:[230,224,213],lineWidth:0.5},
+        headStyles:{fillColor:DARK,textColor:[255,255,255],fontStyle:"bold"}, theme:"grid"
+      });
+      y=doc.lastAutoTable.finalY+20;
+
+      const imgFiles=files.filter(isImageFile);
+      if(imgFiles.length){
+        doc.addPage(); y=56; y=sectionTitle(doc,"Pièces jointes (images)",M,y,GOLD)+6;
+        for(const f of imgFiles){
+          try{
+            const { data, error } = await sb.storage.from("applications").download(f.path);
+            if(error||!data) throw (error||new Error("download"));
+            const dataURL=await blobToDataURL(data);
+            const fmt=(/png/i.test(f.type)||/\.png$/i.test(f.name||""))?"PNG":"JPEG";
+            const nat=await imgSize(dataURL); if(!(nat.w>0&&nat.h>0)) throw new Error("image 0x0");
+            if(y+16+160>PH-M){ doc.addPage(); y=56; }
+            doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(MUTED[0],MUTED[1],MUTED[2]);
+            doc.text(pdfText(labelFor(f.field)+" - "+(f.name||"")),M,y); y+=14;
+            let dispW=CW, dispH=CW*nat.h/nat.w; const availH=PH-M-y;
+            if(dispH>availH){ dispH=availH; dispW=availH*nat.w/nat.h; if(dispW>CW){ dispW=CW; dispH=CW*nat.h/nat.w; } }
+            doc.addImage(dataURL,fmt,M,y,dispW,dispH,undefined,"FAST"); y+=dispH+24;
+          }catch(err){
+            y=ensureSpace(doc,y,16,M);
+            doc.setFont("helvetica","italic"); doc.setFontSize(9); doc.setTextColor(179,38,30);
+            doc.text(pdfText("Impossible de charger : "+(f.name||f.path)),M,y); y+=16;
+            console.warn("PDF image embed failed",f,err);
+          }
+        }
+      }
+      stampFooter(doc,MUTED);
+      doc.save("Attica_"+slug(a.applicant_name)+"_"+today()+".pdf");
+    }catch(err){ console.error(err); alert("Échec de l'export PDF : "+(err&&err.message?err.message:err)); }
+    finally{ restore(); }
+  }
+
+  // ---- Excel: per-applicant ----
+  async function exportApplicantXlsx(){
+    if(!current) return;
+    const a=current, restore=setBusy($("d-xlsx"),"Excel…");
+    try{
+      await ensureXlsx(); const XLSX=window.XLSX;
+      const aoa=[];
+      aoa.push(["Dossier de candidature - Attica Résidences"]); aoa.push([]);
+      aoa.push(["Nom",a.applicant_name||""]); aoa.push(["Email",a.applicant_email||""]); aoa.push(["Téléphone",valToStr(a.applicant_phone||"")]);
+      aoa.push(["Type",typeLabel(a.type)]); aoa.push(["Statut",STATUS_LABELS[a.status]||a.status||""]); aoa.push(["Date de dépôt",fmtDate(a.created_at)]);
+      aoa.push([]); aoa.push(["Champ","Valeur"]);
+      for(const [k,v] of orderedFields(a.data)) aoa.push([labelFor(k),valToStr(v)]);
+      aoa.push([]); aoa.push(["Notes internes"]); aoa.push([a.notes||""]);
+      aoa.push([]); aoa.push(["Documents"]); aoa.push(["Champ","Fichier","Type","Taille"]);
+      const files=Array.isArray(a.files)?a.files:[];
+      if(files.length){ for(const f of files) aoa.push([labelFor(f.field),f.name||"",f.type||"",fmtSize(f.size)]); }
+      else aoa.push(["Aucun document","","",""]);
+      const ws=XLSX.utils.aoa_to_sheet(aoa);
+      ws["!cols"]=[{wch:26},{wch:52},{wch:20},{wch:12}];
+      ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:3}}];
+      const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Dossier");
+      XLSX.writeFile(wb,"Attica_"+slug(a.applicant_name)+"_"+today()+".xlsx");
+    }catch(err){ console.error(err); alert("Échec de l'export Excel : "+(err&&err.message?err.message:err)); }
+    finally{ restore(); }
+  }
+
+  // ---- Excel: all (filtered) ----
+  async function exportAllXlsx(){
+    const restore=setBusy($("export-all"),"Export…");
+    try{
+      await ensureXlsx(); const XLSX=window.XLSX;
+      const list=filtered();
+      if(!list.length){ alert("Aucune demande à exporter."); return; }
+      const _skip=new Set(["nom","prenom","email","telephone"]);
+      const fieldKeys=Object.keys(FIELD_LABELS).filter(k=>!_skip.has(k)), fieldHeaders=fieldKeys.map(k=>FIELD_LABELS[k]);
+      const header=["Date","Type","Statut","Nom","Prénom","Email","Téléphone",...fieldHeaders,"Notes","Documents"];
+      const body=list.map(a=>{
+        const data=a.data||{};
+        const nom = (data.nom!=null&&data.nom!=="") ? valToStr(data.nom) : splitName(a.applicant_name).nom;
+        const prenom = (data.prenom!=null&&data.prenom!=="") ? valToStr(data.prenom) : splitName(a.applicant_name).prenom;
+        const docs=(Array.isArray(a.files)?a.files:[]).map(f=>f.name).filter(Boolean).join(", ");
+        return [ fmtDate(a.created_at), typeLabel(a.type), STATUS_LABELS[a.status]||a.status||"", nom, prenom, a.applicant_email||"", valToStr(a.applicant_phone||""),
+          ...fieldKeys.map(k=>(data[k]!=null&&data[k]!=="")?valToStr(data[k]):""), a.notes||"", docs ];
+      });
+      const ws=XLSX.utils.aoa_to_sheet([header,...body]);
+      ws["!cols"]=header.map((h,i)=>({wch:i<7?16:18}));
+      ws["!autofilter"]={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:body.length,c:header.length-1}})};
+      const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Candidatures");
+      XLSX.writeFile(wb,"Attica_candidatures_"+today()+".xlsx");
+    }catch(err){ console.error(err); alert("Échec de l'export : "+(err&&err.message?err.message:err)); }
+    finally{ restore(); }
+  }
+
+  // ---- Wiring ----
+  if($("d-pdf")) $("d-pdf").addEventListener("click", exportApplicantPdf);
+  if($("d-xlsx")) $("d-xlsx").addEventListener("click", exportApplicantXlsx);
+  if($("export-all")) $("export-all").addEventListener("click", exportAllXlsx);
+
 })();
 </script>
 </body>
