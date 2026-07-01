@@ -1031,7 +1031,18 @@ async function submitForm(e) {
   e.preventDefault();
   const form = document.getElementById('reservation-form');
   const btn = form.querySelector('.form-submit');
-  if (!form.checkValidity()) { form.reportValidity(); return; }
+  if (!form.checkValidity()) {
+    const l = (localStorage.getItem('attica-lang') === 'en') ? 'en' : 'fr';
+    const bad = [...form.elements].find(el => el.willValidate && !el.checkValidity());
+    if (bad && (bad.type === 'file' || bad.offsetParent === null)) {
+      const area = bad.closest('.form-group') || bad.parentElement;
+      if (area && area.scrollIntoView) area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert(l === 'en' ? 'Please attach the required document(s) and complete all required fields before submitting.' : 'Merci de joindre le(s) document(s) requis et de compléter tous les champs obligatoires avant d\'envoyer.');
+    } else if (bad) {
+      try { bad.reportValidity(); bad.focus(); } catch (_) {}
+    } else { form.reportValidity(); }
+    return;
+  }
   const cfg = window.ATTICA_CONFIG || {};
   if (!cfg.SUBMIT_ENDPOINT || cfg.SUBMIT_ENDPOINT.indexOf('VOTRE-PROJET') !== -1) {
     alert('Configuration manquante : renseignez assets/js/config.js avant la mise en ligne.');
