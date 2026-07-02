@@ -336,16 +336,21 @@
   });
 
   $("d-delete").addEventListener("click", async () => {
-    if (!current) return;
-    const who = current.applicant_name || current.applicant_email || "cette demande";
+    const app = current;
+    if (!app) return;
+    const who = app.applicant_name || app.applicant_email || "cette demande";
     if (!confirm("Supprimer définitivement la demande de " + who + " et ses documents ? Action irréversible.")) return;
     const btn = $("d-delete"), prev = btn.textContent; btn.disabled = true; btn.textContent = "Suppression…";
     try {
-      const paths = (Array.isArray(current.files) ? current.files : []).map(f => f.path).filter(Boolean);
-      if (paths.length) { try { await sb.storage.from("applications").remove(paths); } catch (_) {} }
-      const { error } = await sb.from("applications").delete().eq("id", current.id);
+      // Delete the row first and confirm a row was actually removed: an RLS-blocked
+      // delete returns no error but 0 rows, so .select() lets us detect that.
+      const { data, error } = await sb.from("applications").delete().eq("id", app.id).select("id");
       if (error) throw error;
-      all = all.filter(x => x.id !== current.id);
+      if (!data || data.length === 0) throw new Error("Suppression refusée (droits insuffisants ou règle non appliquée dans Supabase).");
+      // Row gone -> best-effort remove its files (orphan files are harmless in a private bucket).
+      const paths = (Array.isArray(app.files) ? app.files : []).map(f => f.path).filter(Boolean);
+      if (paths.length) { try { await sb.storage.from("applications").remove(paths); } catch (_) {} }
+      all = all.filter(x => x.id !== app.id);
       closeDrawer(); render();
     } catch (err) {
       alert("Erreur lors de la suppression : " + (err.message || err));
