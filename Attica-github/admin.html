@@ -31,6 +31,9 @@
   .btn.full{width:100%}
   .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
   .btn.ghost:hover{color:var(--gold);border-color:var(--gold);background:transparent}
+  .btn.danger{background:#b3261e;color:#fff}
+  .btn.danger:hover{background:#8f1e17}
+  .btn.danger[disabled]{opacity:.55;cursor:progress;pointer-events:none}
   .err{color:#b3261e;font-size:12px;margin-top:12px;min-height:16px}
 
   /* ---- App shell ---- */
@@ -178,6 +181,7 @@
         <option value="archived">Archivée</option>
       </select>
       <button class="btn" id="d-save">Enregistrer</button>
+      <button class="btn danger" id="d-delete" type="button" style="margin-left:auto">Supprimer</button>
       <span class="saved" id="d-saved">Enregistré ✓</span>
     </div>
     <textarea id="d-notes" placeholder="Notes internes…" style="margin-top:12px"></textarea>
@@ -329,6 +333,24 @@
     const i = all.findIndex(x => x.id === current.id); if (i>=0){ all[i].status=status; all[i].notes=notes; }
     render();
     const s = $("d-saved"); s.classList.add("show"); setTimeout(()=>s.classList.remove("show"), 1500);
+  });
+
+  $("d-delete").addEventListener("click", async () => {
+    if (!current) return;
+    const who = current.applicant_name || current.applicant_email || "cette demande";
+    if (!confirm("Supprimer définitivement la demande de " + who + " et ses documents ? Action irréversible.")) return;
+    const btn = $("d-delete"), prev = btn.textContent; btn.disabled = true; btn.textContent = "Suppression…";
+    try {
+      const paths = (Array.isArray(current.files) ? current.files : []).map(f => f.path).filter(Boolean);
+      if (paths.length) { try { await sb.storage.from("applications").remove(paths); } catch (_) {} }
+      const { error } = await sb.from("applications").delete().eq("id", current.id);
+      if (error) throw error;
+      all = all.filter(x => x.id !== current.id);
+      closeDrawer(); render();
+    } catch (err) {
+      alert("Erreur lors de la suppression : " + (err.message || err));
+      btn.disabled = false; btn.textContent = prev;
+    }
   });
 
   // ---- Filtres ----

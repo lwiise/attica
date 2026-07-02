@@ -67,6 +67,11 @@ create policy "admins update applications"
   on public.applications for update
   to authenticated using (public.is_admin()) with check (public.is_admin());
 
+drop policy if exists "admins delete applications" on public.applications;
+create policy "admins delete applications"
+  on public.applications for delete
+  to authenticated using (public.is_admin());
+
 -- 3) Stockage privé des documents --------------------------------------
 insert into storage.buckets (id, name, public)
 values ('applications', 'applications', false)
@@ -78,6 +83,12 @@ on conflict (id) do nothing;
 drop policy if exists "admins read application files" on storage.objects;
 create policy "admins read application files"
   on storage.objects for select
+  to authenticated
+  using (bucket_id = 'applications' and public.is_admin());
+
+drop policy if exists "admins delete application files" on storage.objects;
+create policy "admins delete application files"
+  on storage.objects for delete
   to authenticated
   using (bucket_id = 'applications' and public.is_admin());
 
