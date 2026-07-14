@@ -173,7 +173,9 @@ Deno.serve(async (req) => {
           headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from,
-            to: notify.split(",").map((s) => s.trim()),
+            // Virgule finale ou double virgule dans NOTIFY_EMAIL -> on
+            // ignore les entrées vides (sinon Resend rejette tout l'envoi).
+            to: notify.split(",").map((s) => s.trim()).filter((s) => s.length > 0),
             subject,
             html,
           }),
