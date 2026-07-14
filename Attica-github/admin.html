@@ -185,6 +185,7 @@
       <span class="saved" id="d-saved">Enregistré ✓</span>
     </div>
     <textarea id="d-notes" placeholder="Notes internes…" style="margin-top:12px"></textarea>
+    <div id="d-notify" style="margin-top:10px;font-size:13px"></div>
   </div>
   <div class="dsection">
     <h3>Documents</h3>
@@ -287,6 +288,21 @@
     $("d-meta").textContent = `${a.type} · ${new Date(a.created_at).toLocaleString("fr-CH")} · ${a.applicant_email||""}`;
     $("d-status").value = a.status;
     $("d-notes").value = a.notes || "";
+
+    // Email de notification : rendre visible un éventuel échec d'envoi.
+    const nEl = $("d-notify");
+    if (a.notify_status === "sent"){
+      nEl.style.color = "#2e7d32";
+      nEl.textContent = "Email de notification : envoyé ✓";
+    } else if (a.notify_status === "error"){
+      nEl.style.color = "#c62828";
+      nEl.textContent = "Email de notification : ÉCHEC — " + (a.notify_error || "raison inconnue");
+    } else if (a.notify_status === "skipped"){
+      nEl.style.color = "var(--muted)";
+      nEl.textContent = "Email de notification : non configuré (" + (a.notify_error || "secrets manquants") + ")";
+    } else {
+      nEl.textContent = ""; // demandes antérieures à ce suivi
+    }
 
     // Champs
     const kv = $("d-fields"); kv.innerHTML = "";

@@ -94,6 +94,44 @@ SUBMIT_ENDPOINT:   "https://xxxx.supabase.co/functions/v1/submit-application",
 
 ---
 
+## Dépannage : les emails de notification n'arrivent plus ?
+
+Bonne nouvelle : **les demandes sont quand même enregistrées** (vérifiez
+`/admin.html`) — seul l'email d'alerte est en cause. Depuis la mise à jour de
+la fonction, chaque demande porte le résultat de l'envoi (visible dans le
+volet de détail du tableau de bord : « Email de notification : envoyé ✓ /
+ÉCHEC — raison »), et l'erreur exacte apparaît dans
+**Supabase → Edge Functions → submit-application → Logs**.
+
+Pour bénéficier de ce suivi sur un projet déjà en place :
+1. Ré-exécutez [`backend/schema.sql`](backend/schema.sql) dans le SQL Editor
+   (le fichier est ré-exécutable sans risque ; il ajoute 2 colonnes).
+2. Redéployez la fonction : recollez le contenu de
+   [`backend/functions/submit-application/index.ts`](backend/functions/submit-application/index.ts)
+   dans **Edge Functions → submit-application**, ou
+   `supabase functions deploy submit-application --no-verify-jwt`.
+3. Envoyez une demande test et regardez le statut dans le tableau de bord.
+
+Causes fréquentes d'un arrêt des emails **alors que ça fonctionnait** :
+- **Domaine plus vérifié chez Resend** : si les enregistrements DNS
+  (SPF/DKIM) ont été modifiés ou supprimés (changement d'hébergeur, refonte
+  DNS), Resend rejette chaque envoi. Vérifiez https://resend.com/domains
+  (statut « Verified »).
+- **Clé API révoquée ou supprimée** : vérifiez https://resend.com/api-keys et
+  que le secret `RESEND_API_KEY` existe toujours dans
+  **Project Settings → Edge Functions → Secrets**.
+- **Quota Resend atteint** : offre gratuite = 100 emails/jour, 3 000/mois.
+- **Expéditeur `onboarding@resend.dev`** : ne délivre qu'à l'adresse du
+  compte Resend lui-même — utilisez un domaine vérifié.
+- **Filtrage spam** : cherchez « Nouvelle demande » dans le dossier
+  spam/indésirables ; consultez https://resend.com/emails (statut
+  « Delivered » vs « Bounced »).
+- **Projet Supabase en pause** (offre gratuite, ~1 semaine d'inactivité) :
+  dans ce cas le formulaire entier échoue, pas seulement l'email —
+  réactivez le projet depuis le dashboard Supabase.
+
+---
+
 ## Conformité & sécurité (à valider)
 - ✅ Données hébergées en **UE (Frankfurt)** ; bucket **privé** ; accès admin par login.
 - ✅ Téléchargements via **URLs signées** temporaires (5 min).

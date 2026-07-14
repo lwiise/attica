@@ -140,10 +140,21 @@ Deno.serve(async (req) => {
     if (insErr) throw insErr;
 
     // Notification email (optionnelle) -------------------------------
+    // Un échec d'envoi ne bloque jamais l'enregistrement, mais il ne doit
+    // plus être silencieux : le résultat est journalisé (logs de la
+    // fonction) ET enregistré sur la demande (notify_status/notify_error),
+    // visible dans le tableau de bord.
     const resendKey = Deno.env.get("RESEND_API_KEY");
     const notify = Deno.env.get("NOTIFY_EMAIL");
     const from = Deno.env.get("FROM_EMAIL");
-    if (resendKey && notify && from) {
+    let notifyStatus = "skipped";
+    let notifyError: string | null = null;
+    if (!resendKey || !notify || !from) {
+      notifyError = "Secrets manquants : " +
+        [!resendKey && "RESEND_API_KEY", !notify && "NOTIFY_EMAIL", !from && "FROM_EMAIL"]
+          .filter(Boolean).join(", ");
+      console.warn(`[notify] email non envoyé — ${notifyError}`);
+    } else {
       const safeWho = applicantName || fields["email"] || "";
       const rows = Object.entries(fields)
         .map(([k, v]) =>
@@ -157,7 +168,7 @@ Deno.serve(async (req) => {
       // Sujet : pas de HTML, mais on retire les sauts de ligne (anti-injection d'en-tête).
       const subject = `Nouvelle demande ${type} — ${safeWho}`.replace(/[\r\n]+/g, " ").slice(0, 200);
       try {
-        await fetch("https://api.resend.com/emails", {
+        const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -167,10 +178,27 @@ Deno.serve(async (req) => {
             html,
           }),
         });
-      } catch (_) {
-        // l'échec de l'email ne doit jamais bloquer l'enregistrement
+        if (res.ok) {
+          notifyStatus = "sent";
+        } else {
+          // fetch ne lève PAS d'exception sur un statut HTTP d'erreur :
+          // clé révoquée (401), domaine non vérifié (403), quota atteint
+          // (429)… arrivent ici, avec le message exact renvoyé par Resend.
+          notifyStatus = "error";
+          const body = (await res.text()).slice(0, 500);
+          notifyError = `Resend ${res.status} : ${body}`;
+          console.error(`[notify] échec d'envoi — ${notifyError}`);
+        }
+      } catch (e) {
+        notifyStatus = "error";
+        notifyError = `Réseau : ${e instanceof Error ? e.message : String(e)}`;
+        console.error(`[notify] échec d'envoi — ${notifyError}`);
       }
     }
+    const { error: nErr } = await supabase.from("applications")
+      .update({ notify_status: notifyStatus, notify_error: notifyError })
+      .eq("id", id);
+    if (nErr) console.error("[notify] statut non enregistré (colonnes manquantes ? relancez schema.sql) :", nErr.message ?? nErr);
 
     return json({ ok: true, id });
   } catch (err) {

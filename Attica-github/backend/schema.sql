@@ -19,6 +19,13 @@ create table if not exists public.applications (
   notes           text  not null default ''
 );
 
+-- Suivi de l'email de notification envoyé à l'admin ('sent' | 'error' |
+-- 'skipped'). En cas d'échec, notify_error contient la raison exacte
+-- renvoyée par Resend. Via `alter ... if not exists` pour que ce fichier
+-- reste ré-exécutable tel quel sur un projet déjà en place.
+alter table public.applications add column if not exists notify_status text;
+alter table public.applications add column if not exists notify_error  text;
+
 create index if not exists applications_created_at_idx on public.applications (created_at desc);
 create index if not exists applications_status_idx     on public.applications (status);
 create index if not exists applications_type_idx       on public.applications (type);
