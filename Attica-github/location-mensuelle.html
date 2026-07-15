@@ -225,6 +225,13 @@ nav {
 .form-upload-icon { color: var(--gold); margin-bottom: 8px; }
 .form-upload-icon svg { width: 28px; height: 28px; stroke: var(--gold); stroke-width: 1.5; fill: none; }
 .form-upload-label { font-size: 12px; font-weight: 300; color: var(--muted); letter-spacing: 0.1em; }
+.form-upload-list { display: none; flex-direction: column; gap: 6px; margin-top: 10px; text-align: left; }
+.form-upload-list.has-files { display: flex; }
+.form-upload-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid rgba(168,132,58,0.25); background: rgba(168,132,58,0.04); font-size: 12px; font-weight: 300; }
+.form-upload-item-name { flex: 1; color: var(--dark); overflow-wrap: anywhere; }
+.form-upload-item-size { color: var(--muted); white-space: nowrap; }
+.form-upload-item-remove { flex-shrink: 0; width: 22px; height: 22px; border: 1px solid rgba(168,132,58,0.35); background: none; color: var(--muted); font-size: 14px; line-height: 1; cursor: pointer; transition: color 0.3s, border-color 0.3s; }
+.form-upload-item-remove:hover { color: #B4432F; border-color: #B4432F; }
 .form-note { font-size: 12px; font-weight: 300; color: var(--muted); margin-top: 4px; line-height: 1.6; }
 .form-submit {
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -1016,13 +1023,74 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') changePhoto(1);
 });
 
+// Documents : chaque sélection S'AJOUTE aux fichiers déjà choisis (au lieu de
+// les remplacer) ; la liste s'affiche sous la zone avec un bouton pour retirer.
 document.querySelectorAll('.form-upload-area input[type=file]').forEach(input => {
-  input.addEventListener('change', function() {
-    const label = this.closest('.form-upload-area').querySelector('.form-upload-label');
-    if (this.files.length > 0) {
-      label.innerHTML = '✓ ' + Array.from(this.files).map(f => f.name).join(', ');
+  const area = input.closest('.form-upload-area');
+  const label = area.querySelector('.form-upload-label');
+  const defaultFr = label.getAttribute('data-fr');
+  const defaultEn = label.getAttribute('data-en');
+  const list = document.createElement('div');
+  list.className = 'form-upload-list';
+  area.insertAdjacentElement('afterend', list);
+  let selected = [];
+
+  const fmtSize = b => b >= 1024 * 1024 ? (b / (1024 * 1024)).toFixed(1) + ' Mo' : Math.max(1, Math.round(b / 1024)) + ' Ko';
+
+  function render() {
+    const lang = (localStorage.getItem('attica-lang') === 'en') ? 'en' : 'fr';
+    list.innerHTML = '';
+    list.classList.toggle('has-files', selected.length > 0);
+    selected.forEach((f, i) => {
+      const row = document.createElement('div');
+      row.className = 'form-upload-item';
+      const name = document.createElement('span');
+      name.className = 'form-upload-item-name';
+      name.textContent = f.name;
+      const size = document.createElement('span');
+      size.className = 'form-upload-item-size';
+      size.textContent = fmtSize(f.size);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'form-upload-item-remove';
+      btn.innerHTML = '&times;';
+      btn.setAttribute('aria-label', (lang === 'en' ? 'Remove ' : 'Retirer ') + f.name);
+      btn.addEventListener('click', () => { selected.splice(i, 1); sync(); });
+      row.append(name, size, btn);
+      list.appendChild(row);
+    });
+    if (selected.length > 0) {
+      const fr = '✓ ' + selected.length + ' fichier(s) joint(s) — <strong>cliquer pour en ajouter</strong>';
+      const en = '✓ ' + selected.length + ' file(s) attached — <strong>click to add more</strong>';
+      label.setAttribute('data-fr', fr);
+      label.setAttribute('data-en', en);
+      label.innerHTML = (lang === 'en') ? en : fr;
       label.style.color = 'var(--gold)';
+    } else {
+      label.setAttribute('data-fr', defaultFr);
+      label.setAttribute('data-en', defaultEn);
+      label.innerHTML = (lang === 'en') ? defaultEn : defaultFr;
+      label.style.color = '';
     }
+  }
+
+  function sync() {
+    try {
+      const dt = new DataTransfer();
+      selected.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    } catch (_) {
+      // Navigateur sans DataTransfer inscriptible : seule la dernière sélection est soumise.
+      selected = Array.from(input.files);
+    }
+    render();
+  }
+
+  input.addEventListener('change', () => {
+    Array.from(input.files).forEach(f => {
+      if (!selected.some(s => s.name === f.name && s.size === f.size && s.lastModified === f.lastModified)) selected.push(f);
+    });
+    sync();
   });
 });
 

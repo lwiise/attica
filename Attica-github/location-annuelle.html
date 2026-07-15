@@ -296,6 +296,13 @@ nav {
 .form-upload-icon svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 1.5; fill: none; }
 .form-upload-label { font-size: 12px; font-weight: 300; color: var(--muted); letter-spacing: 0.1em; }
 .form-upload-label strong { color: var(--gold); font-weight: 400; }
+.form-upload-list { display: none; flex-direction: column; gap: 6px; margin-top: 10px; text-align: left; }
+.form-upload-list.has-files { display: flex; }
+.form-upload-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid rgba(168,132,58,0.25); background: rgba(168,132,58,0.04); font-size: 12px; font-weight: 300; }
+.form-upload-item-name { flex: 1; color: var(--dark); overflow-wrap: anywhere; }
+.form-upload-item-size { color: var(--muted); white-space: nowrap; }
+.form-upload-item-remove { flex-shrink: 0; width: 22px; height: 22px; border: 1px solid rgba(168,132,58,0.35); background: none; color: var(--muted); font-size: 14px; line-height: 1; cursor: pointer; transition: color 0.3s, border-color 0.3s; }
+.form-upload-item-remove:hover { color: #B4432F; border-color: #B4432F; }
 .form-section-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: 20px; font-weight: 400;
@@ -1175,7 +1182,7 @@ a.gold-link:hover { border-color: var(--gold); }
         <div class="form-group full">
           <label class="form-label" data-fr="Extrait Office des Poursuites (si domicilié en Suisse)" data-en="Debt Enforcement Extract (if resident in Switzerland)">Extrait Office des Poursuites (si domicilié en Suisse)</label>
           <div class="form-upload-area" onclick="document.getElementById('upload-poursuites').click()">
-            <input type="file" id="upload-poursuites" name="extrait_poursuites" accept=".pdf,.jpg,.jpeg,.png">
+            <input type="file" id="upload-poursuites" name="extrait_poursuites" accept=".pdf,.jpg,.jpeg,.png" multiple>
             <div class="form-upload-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--gold);stroke-width:1.5;fill:none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
             <p class="form-upload-label" data-fr="<strong>Uploader</strong> — Original requis pour les personnes domiciliées en Suisse" data-en="<strong>Upload</strong> — Original required for persons living in Switzerland"><strong>Uploader</strong> — Original requis pour les personnes domiciliées en Suisse</p>
           </div>
@@ -1183,7 +1190,7 @@ a.gold-link:hover { border-color: var(--gold); }
         <div class="form-group full">
           <label class="form-label" data-fr="Copie assurance RC + Ménage (si disponible)" data-en="Copy of Liability &amp; Household insurance (if available)">Copie assurance RC + Ménage (si disponible)</label>
           <div class="form-upload-area" onclick="document.getElementById('upload-assurance').click()">
-            <input type="file" id="upload-assurance" name="assurance_copie" accept=".pdf,.jpg,.jpeg,.png">
+            <input type="file" id="upload-assurance" name="assurance_copie" accept=".pdf,.jpg,.jpeg,.png" multiple>
             <div class="form-upload-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--gold);stroke-width:1.5;fill:none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
             <p class="form-upload-label" data-fr="<strong>Uploader</strong> — À renouveler chaque année à info@segurimmo.ch" data-en="<strong>Upload</strong> — To be renewed annually at info@segurimmo.ch"><strong>Uploader</strong> — À renouveler chaque année à info@segurimmo.ch</p>
           </div>
@@ -1334,15 +1341,74 @@ function scrollGallery(dir) {
   track.scrollBy({ left: dir * (slide.offsetWidth + 12), behavior: 'smooth' });
 }
 
-// File upload labels
+// Documents : chaque sélection S'AJOUTE aux fichiers déjà choisis (au lieu de
+// les remplacer) ; la liste s'affiche sous la zone avec un bouton pour retirer.
 document.querySelectorAll('.form-upload-area input[type=file]').forEach(input => {
-  input.addEventListener('change', function() {
-    const label = this.closest('.form-upload-area').querySelector('.form-upload-label');
-    if (this.files.length > 0) {
-      const names = Array.from(this.files).map(f => f.name).join(', ');
-      label.innerHTML = '✓ ' + names;
+  const area = input.closest('.form-upload-area');
+  const label = area.querySelector('.form-upload-label');
+  const defaultFr = label.getAttribute('data-fr');
+  const defaultEn = label.getAttribute('data-en');
+  const list = document.createElement('div');
+  list.className = 'form-upload-list';
+  area.insertAdjacentElement('afterend', list);
+  let selected = [];
+
+  const fmtSize = b => b >= 1024 * 1024 ? (b / (1024 * 1024)).toFixed(1) + ' Mo' : Math.max(1, Math.round(b / 1024)) + ' Ko';
+
+  function render() {
+    const lang = (localStorage.getItem('attica-lang') === 'en') ? 'en' : 'fr';
+    list.innerHTML = '';
+    list.classList.toggle('has-files', selected.length > 0);
+    selected.forEach((f, i) => {
+      const row = document.createElement('div');
+      row.className = 'form-upload-item';
+      const name = document.createElement('span');
+      name.className = 'form-upload-item-name';
+      name.textContent = f.name;
+      const size = document.createElement('span');
+      size.className = 'form-upload-item-size';
+      size.textContent = fmtSize(f.size);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'form-upload-item-remove';
+      btn.innerHTML = '&times;';
+      btn.setAttribute('aria-label', (lang === 'en' ? 'Remove ' : 'Retirer ') + f.name);
+      btn.addEventListener('click', () => { selected.splice(i, 1); sync(); });
+      row.append(name, size, btn);
+      list.appendChild(row);
+    });
+    if (selected.length > 0) {
+      const fr = '✓ ' + selected.length + ' fichier(s) joint(s) — <strong>cliquer pour en ajouter</strong>';
+      const en = '✓ ' + selected.length + ' file(s) attached — <strong>click to add more</strong>';
+      label.setAttribute('data-fr', fr);
+      label.setAttribute('data-en', en);
+      label.innerHTML = (lang === 'en') ? en : fr;
       label.style.color = 'var(--gold)';
+    } else {
+      label.setAttribute('data-fr', defaultFr);
+      label.setAttribute('data-en', defaultEn);
+      label.innerHTML = (lang === 'en') ? defaultEn : defaultFr;
+      label.style.color = '';
     }
+  }
+
+  function sync() {
+    try {
+      const dt = new DataTransfer();
+      selected.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    } catch (_) {
+      // Navigateur sans DataTransfer inscriptible : seule la dernière sélection est soumise.
+      selected = Array.from(input.files);
+    }
+    render();
+  }
+
+  input.addEventListener('change', () => {
+    Array.from(input.files).forEach(f => {
+      if (!selected.some(s => s.name === f.name && s.size === f.size && s.lastModified === f.lastModified)) selected.push(f);
+    });
+    sync();
   });
 });
 
