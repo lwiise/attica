@@ -354,6 +354,9 @@
       closeDrawer(); render();
     } catch (err) {
       alert("Erreur lors de la suppression : " + (err.message || err));
+    } finally {
+      // Always restore the shared button — otherwise it stays disabled after a
+      // successful delete and the next deletion silently does nothing until reload.
       btn.disabled = false; btn.textContent = prev;
     }
   });
